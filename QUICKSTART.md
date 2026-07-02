@@ -59,7 +59,7 @@ Le système enregistre automatiquement chaque arrosage et ajuste l'intervalle en
 
 ### 1. Enrichir le catalogue (optionnel mais recommandé)
 
-Pour passer de 10 à 100-200+ plantes :
+Pour passer de 3 à 100-500+ plantes :
 
 ```bash
 # 1. Créer un compte gratuit sur Open Plantbook
@@ -73,13 +73,23 @@ cp .env.example .env.local
 # Éditer .env.local et ajouter :
 # OPENPLANTBOOK_API_KEY=votre-clé-ici
 
-# 4. Générer le catalogue enrichi
+# 4. Générer le catalogue enrichi (mode incrémental)
 python3 scripts/fetch_enriched_catalog.py
-# → Télécharge 100-200 plantes
+# → Télécharge 100-300 plantes
 # → Télécharge les images
 # → Génère assets/plants/plants.json
 # → Régénère lib/data/plants_catalog.dart
+
+# 5. Relancer pour en avoir PLUS (merge automatique)
+python3 scripts/fetch_enriched_catalog.py
+# → Garde les anciennes + ajoute 100-300 nouvelles
+# → Pas de doublons (déduplique automatiquement)
+
+# 6. Continuer jusqu'à saturation (~500 plantes max)
+python3 scripts/fetch_enriched_catalog.py
 ```
+
+**🎯 Mode incrémental** : Chaque run **ajoute** de nouvelles plantes sans supprimer les anciennes !
 
 ### 2. Implémenter l'UI (nécessaire pour utilisateurs)
 

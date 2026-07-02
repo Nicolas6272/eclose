@@ -46,3 +46,6 @@ app.*.map.json
 
 # Local secrets (Perenual API key for fetch script)
 .env.local
+
+# Plant catalog data (generated, not committed to reduce repo size)
+assets/plants/plants.json

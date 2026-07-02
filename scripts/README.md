@@ -6,9 +6,14 @@ Ce dossier contient les scripts pour enrichir la base de données de plantes d'�
 
 ### `fetch_enriched_catalog.py` - Catalogue enrichi (recommandé)
 
-Génère un catalogue enrichi de ~100-200+ plantes d'intérieur à partir de sources gratuites :
+Génère un catalogue enrichi de plantes d'intérieur à partir de sources gratuites :
 - **Open Plantbook** (gratuit, ~1000+ plantes, métadonnées riches)
 - **PlantSolve** (en développement - scraping nécessaire)
+
+**🎯 Mode incrémental** : Le script **merge** avec le catalogue existant au lieu de remplacer !
+- Premier run : génère X plantes
+- Deuxième run : garde les X + ajoute Y nouvelles plantes
+- **Pas de doublons** : déduplique automatiquement par nom commun et scientifique
 
 **Prérequis :**
 1. Créer un compte gratuit sur [Open Plantbook](https://open.plantbook.io)
@@ -27,14 +32,26 @@ OPENPLANTBOOK_SECRET=your-client-secret
 **Utilisation :**
 
 ```bash
+# Premier run : génère ~100-300 plantes
+python3 scripts/fetch_enriched_catalog.py
+
+# Deuxième run : ajoute 100-300 nouvelles plantes
+# (garde les anciennes, déduplique)
+python3 scripts/fetch_enriched_catalog.py
+
+# Troisième run : continue à ajouter jusqu'à saturation
 python3 scripts/fetch_enriched_catalog.py
 ```
 
 Le script va :
-1. Fetcher les plantes populaires depuis Open Plantbook
-2. Télécharger les images
-3. Générer `assets/plants/plants.json` avec métadonnées enrichies
-4. Régénérer `lib/data/plants_catalog.dart`
+1. **Charger le catalogue existant** (si présent)
+2. Fetcher de nouvelles plantes depuis Open Plantbook
+3. **Merger** avec les anciennes (pas de doublons)
+4. Télécharger **uniquement les nouvelles images** (skip si déjà téléchargées)
+5. Générer `assets/plants/plants.json` avec métadonnées enrichies
+6. Régénérer `lib/data/plants_catalog.dart`
+
+**💡 Astuce** : Le script cherche maintenant dans une liste de **100+ noms de plantes** et peut théoriquement aller jusqu'à ~500 plantes uniques (TARGET_COUNT = 500).
 
 ### `fetch_perenual_photos.py` - Perenual (ancien)
 

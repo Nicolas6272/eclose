@@ -28,7 +28,7 @@ ENV_FILE = ROOT / ".env.local"
 PLANTSOLVE_DATASET_URL = "https://www.plantsolve.com/api/v1/dataset.json"
 OPENPLANTBOOK_BASE = "https://open.plantbook.io/api/v1"
 
-TARGET_COUNT = 200  # Target number of plants to include
+TARGET_COUNT = 500  # Target number of plants to include (will stop when no more found)
 REQUEST_DELAY_SEC = 1.5
 
 GENERIC_PLANTS = [
@@ -164,8 +164,9 @@ def fetch_openplantbook_plants(config: dict, limit: int = 200) -> list[dict]:
         print("  ⚠ No Open Plantbook credentials configured\n")
         return []
     
-    # Common houseplants to search for
+    # Extended list of common houseplants to search for
     common_houseplants = [
+        # Very popular indoor plants
         "Monstera deliciosa", "Pothos", "Snake plant", "Spider plant", 
         "Peace lily", "Rubber plant", "Fiddle leaf fig", "ZZ plant",
         "Philodendron", "Aloe vera", "Jade plant", "English ivy",
@@ -175,6 +176,59 @@ def fetch_openplantbook_plants(config: dict, limit: int = 200) -> list[dict]:
         "Prayer plant", "Chinese evergreen", "Dieffenbachia", "Schefflera",
         "Hoya", "String of pearls", "African violet", "Bird of paradise",
         "Alocasia", "Syngonium", "Maranta", "Sansevieria",
+        
+        # Additional popular plants
+        "Pilea", "Tradescantia", "Oxalis", "Coleus", "Fittonia",
+        "Haworthia", "Echeveria", "Sedum", "Crassula", "Kalanchoe",
+        "Asparagus fern", "Ponytail palm", "Yucca", "Norfolk pine",
+        "Nerve plant", "Polka dot plant", "Aluminum plant", "Purple heart",
+        "Wandering Jew", "Inch plant", "Moses in the cradle",
+        
+        # Aroids
+        "Scindapsus", "Epipremnum", "Monstera adansonii", "Monstera obliqua",
+        "Philodendron Brasil", "Philodendron micans", "Philodendron birkin",
+        "Anthurium clarinervium", "Anthurium crystallinum",
+        
+        # Calatheas & Marantas
+        "Calathea orbifolia", "Calathea medallion", "Calathea rattlesnake",
+        "Maranta leuconeura", "Stromanthe triostar",
+        
+        # Ferns
+        "Maidenhair fern", "Bird's nest fern", "Staghorn fern",
+        "Rabbit's foot fern", "Button fern", "Lemon button fern",
+        
+        # Palms
+        "Areca palm", "Parlor palm", "Kentia palm", "Majesty palm",
+        "Lady palm", "Bamboo palm",
+        
+        # Succulents & Cacti
+        "Zebra plant", "String of hearts", "String of bananas",
+        "Burro's tail", "Christmas cactus", "Easter cactus",
+        "Bunny ears cactus", "Old man cactus", "Moon cactus",
+        
+        # Flowering plants
+        "Cyclamen", "Gloxinia", "Begonia rex", "Lipstick plant",
+        "Goldfish plant", "Flamingo flower", "Crown of thorns",
+        
+        # Foliage plants
+        "Cast iron plant", "Corn plant", "Ti plant", "Polyscias",
+        "Aralia", "Fatsia", "Pittosporum", "Podocarpus",
+        
+        # Herbs (indoor)
+        "Basil", "Mint", "Parsley", "Cilantro", "Thyme", "Rosemary",
+        "Oregano", "Chives", "Sage", "Lavender",
+        
+        # Less common but popular
+        "Swiss cheese plant", "Velvet leaf", "Jewel orchid",
+        "Living stones", "Panda plant", "Chenille plant",
+        "Aluminum plant", "Nerve plant", "Polka dot plant",
+        
+        # Air plants
+        "Tillandsia", "Air plant",
+        
+        # Large statement plants
+        "Elephant ear", "Tree philodendron", "Dragon tree",
+        "Umbrella plant", "False aralia", "Ming aralia",
     ]
     
     plants = []
@@ -303,10 +357,20 @@ def download_image(url: str, filename: str) -> str | None:
 
 
 def download_all_images(plants: list[dict]) -> list[dict]:
-    """Download images for all plants"""
+    """Download images for all plants (skip if already exists)"""
     print("Phase 3 — downloading images...\n")
     
+    downloaded = 0
+    skipped = 0
+    
     for i, plant in enumerate(plants, 1):
+        # Skip if image already set (from existing catalog)
+        if plant.get("image_asset"):
+            existing_path = ROOT / plant["image_asset"]
+            if existing_path.exists():
+                skipped += 1
+                continue
+        
         image_url = plant.get("image_url")
         if not image_url:
             continue
@@ -319,26 +383,69 @@ def download_all_images(plants: list[dict]) -> list[dict]:
             ext = ".webp"
         
         filename = f"{slugify(name)}_{plant['id']}{ext}"
+        
+        # Skip if file already exists
+        existing_path = OUT_DIR / filename
+        if existing_path.exists():
+            plant["image_asset"] = f"assets/plants/images/{filename}"
+            skipped += 1
+            continue
+        
         asset_path = download_image(image_url, filename)
         
         if asset_path:
             plant["image_asset"] = asset_path
+            downloaded += 1
             print(f"  [{i}/{len(plants)}] {name}")
         
         time.sleep(0.3)  # Be gentle
     
-    print()
+    print(f"\n  ✓ Downloaded {downloaded} new images, skipped {skipped} existing\n")
     return plants
+
+
+def load_existing_catalog() -> list[dict]:
+    """Load existing plants.json if it exists"""
+    if not JSON_OUT.exists():
+        return []
+    
+    try:
+        with open(JSON_OUT, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+            if isinstance(data, list):
+                print(f"  ℹ Loaded {len(data)} existing plants from catalog\n")
+                return data
+    except Exception as e:
+        print(f"  ⚠ Could not load existing catalog: {e}\n")
+    
+    return []
 
 
 def merge_and_deduplicate(plantsolve: list[dict], openplantbook: list[dict]) -> list[dict]:
     """Merge plants from multiple sources, removing duplicates"""
     print("Phase 4 — merging and deduplicating...\n")
     
+    # Load existing catalog first
+    existing_plants = load_existing_catalog()
+    
     all_plants = []
     seen_names = set()
     
+    # Priority 0: Keep existing plants (to preserve IDs and avoid re-downloads)
+    for plant in existing_plants:
+        name_key = plant.get("common_name", "").lower().strip()
+        sci_name = plant.get("scientific_name", "").lower().strip()
+        
+        if name_key:
+            all_plants.append(plant)
+            seen_names.add(name_key)
+            if sci_name:
+                seen_names.add(sci_name)
+    
+    print(f"  ✓ Kept {len(all_plants)} existing plants")
+    
     # Priority 1: PlantSolve (richest care data)
+    new_count = 0
     for plant in plantsolve:
         normalized = normalize_plant_data("plantsolve", plant, len(all_plants) + 1)
         name_key = normalized["common_name"].lower().strip()
@@ -346,8 +453,12 @@ def merge_and_deduplicate(plantsolve: list[dict], openplantbook: list[dict]) -> 
         if name_key not in seen_names:
             all_plants.append(normalized)
             seen_names.add(name_key)
+            new_count += 1
+    
+    print(f"  ✓ Added {new_count} new plants from PlantSolve")
     
     # Priority 2: Open Plantbook (larger catalog)
+    new_count = 0
     for plant in openplantbook:
         normalized = normalize_plant_data("openplantbook", plant, len(all_plants) + 1)
         name_key = normalized["common_name"].lower().strip()
@@ -360,10 +471,14 @@ def merge_and_deduplicate(plantsolve: list[dict], openplantbook: list[dict]) -> 
             seen_names.add(name_key)
             if sci_name:
                 seen_names.add(sci_name)
+            new_count += 1
     
-    # Reassign sequential IDs
+    print(f"  ✓ Added {new_count} new plants from Open Plantbook")
+    
+    # Reassign sequential IDs (stable: old plants keep their IDs)
     for i, plant in enumerate(all_plants, 1):
-        plant["id"] = i
+        if "id" not in plant or plant["id"] < 1:
+            plant["id"] = i
     
     print(f"  ✓ Total unique plants: {len(all_plants)}\n")
     return all_plants
