@@ -148,7 +148,12 @@ def get_openplantbook_detail(pid: str, api_key: str | None = None, token: str | 
 
 
 def fetch_openplantbook_plants(config: dict, limit: int = 200) -> list[dict]:
-    """Fetch popular houseplants from Open Plantbook"""
+    """
+    Fetch popular houseplants from Open Plantbook
+    
+    NOTE: Open Plantbook does NOT have a "list all plants" endpoint.
+    We must search by plant names. See docs/OPENPLANTBOOK_LIMITATION.md
+    """
     print("Phase 2 — fetching Open Plantbook plants...\n")
     
     api_key = config.get("openplantbook_key")
@@ -165,6 +170,7 @@ def fetch_openplantbook_plants(config: dict, limit: int = 200) -> list[dict]:
         return []
     
     # Extended list of common houseplants to search for
+    # Add more names here to fetch more plants!
     common_houseplants = [
         # Very popular indoor plants
         "Monstera deliciosa", "Pothos", "Snake plant", "Spider plant", 

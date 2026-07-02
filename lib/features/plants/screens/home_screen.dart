@@ -99,18 +99,24 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  // Dev actions disabled - catalog is now static only
+  // Users can only use plants from the pre-generated catalog
   Widget _buildDevActions() {
+    return const SizedBox.shrink(); // Hidden in production
+    
+    /* Uncomment for development testing:
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          FilledButton.icon(
-            onPressed: _addPlant,
-            icon: const Icon(Icons.add),
-            label: const Text('Ajouter une plante'),
-          ),
-          const SizedBox(height: 8),
+          // Removed: Users cannot add custom plants
+          // FilledButton.icon(
+          //   onPressed: _addPlant,
+          //   icon: const Icon(Icons.add),
+          //   label: const Text('Ajouter une plante'),
+          // ),
+          // const SizedBox(height: 8),
           OutlinedButton.icon(
             onPressed: _resetOnboarding,
             icon: const Icon(Icons.restart_alt),
@@ -119,6 +125,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
     );
+    */
   }
 
   @override

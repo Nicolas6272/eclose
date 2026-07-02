@@ -10,6 +10,8 @@ Génère un catalogue enrichi de plantes d'intérieur à partir de sources gratu
 - **Open Plantbook** (gratuit, ~1000+ plantes, métadonnées riches)
 - **PlantSolve** (en développement - scraping nécessaire)
 
+⚠️ **Limitation importante** : Open Plantbook n'a pas d'endpoint "list all plants". Le script utilise une **liste de 100+ noms de plantes courantes** et cherche chacune. Voir [`docs/OPENPLANTBOOK_LIMITATION.md`](../docs/OPENPLANTBOOK_LIMITATION.md) pour les détails.
+
 **🎯 Mode incrémental** : Le script **merge** avec le catalogue existant au lieu de remplacer !
 - Premier run : génère X plantes
 - Deuxième run : garde les X + ajoute Y nouvelles plantes

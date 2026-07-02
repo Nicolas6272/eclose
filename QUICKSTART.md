@@ -175,7 +175,7 @@ Voir exemples dans `IMPLEMENTATION_NOTES.md`.
 - ✅ Intervalles d'arrosage plus précis
 - ✅ Personnalisation selon environnement réel
 - ✅ Apprentissage automatique de leurs habitudes
-- ✅ Plus de choix de plantes (100+ vs 10)
+- ✅ Catalogue statique curé (pas de plantes custom)
 
 ### Pour vous (développeur)
 - ✅ 100% rétro-compatible (pas de migration)
