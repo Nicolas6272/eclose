@@ -1,3 +1,16 @@
+enum LightExposure {
+  lowLight,
+  mediumLight,
+  brightIndirect,
+  directSun,
+}
+
+enum PotSize {
+  small,
+  medium,
+  large,
+}
+
 class UserPlant {
   const UserPlant({
     required this.id,
@@ -6,6 +19,9 @@ class UserPlant {
     required this.wateringDays,
     required this.addedAt,
     required this.lastWateredAt,
+    this.lightExposure = LightExposure.mediumLight,
+    this.potSize = PotSize.medium,
+    this.customNotes,
   });
 
   final String id;
@@ -14,6 +30,10 @@ class UserPlant {
   final int wateringDays;
   final DateTime addedAt;
   final DateTime lastWateredAt;
+  
+  final LightExposure lightExposure;
+  final PotSize potSize;
+  final String? customNotes;
 
   DateTime get nextWateringAt =>
       lastWateredAt.add(Duration(days: wateringDays));
@@ -30,6 +50,9 @@ class UserPlant {
         'wateringDays': wateringDays,
         'addedAt': addedAt.toIso8601String(),
         'lastWateredAt': lastWateredAt.toIso8601String(),
+        'lightExposure': lightExposure.name,
+        'potSize': potSize.name,
+        'customNotes': customNotes,
       };
 
   factory UserPlant.fromJson(Map<String, dynamic> json) {
@@ -39,6 +62,24 @@ class UserPlant {
           json['wateringDaysMax'] as int?,
         );
 
+    LightExposure lightExposure = LightExposure.mediumLight;
+    if (json['lightExposure'] != null) {
+      try {
+        lightExposure = LightExposure.values.firstWhere(
+          (e) => e.name == json['lightExposure'],
+        );
+      } catch (_) {}
+    }
+
+    PotSize potSize = PotSize.medium;
+    if (json['potSize'] != null) {
+      try {
+        potSize = PotSize.values.firstWhere(
+          (e) => e.name == json['potSize'],
+        );
+      } catch (_) {}
+    }
+
     return UserPlant(
       id: json['id'] as String,
       catalogPlantId: json['catalogPlantId'] as int,
@@ -46,6 +87,9 @@ class UserPlant {
       wateringDays: wateringDays,
       addedAt: DateTime.parse(json['addedAt'] as String),
       lastWateredAt: DateTime.parse(json['lastWateredAt'] as String),
+      lightExposure: lightExposure,
+      potSize: potSize,
+      customNotes: json['customNotes'] as String?,
     );
   }
 
@@ -55,6 +99,8 @@ class UserPlant {
     required String name,
     required int wateringDays,
     DateTime? lastWateredAt,
+    LightExposure lightExposure = LightExposure.mediumLight,
+    PotSize potSize = PotSize.medium,
   }) {
     final now = DateTime.now();
     return UserPlant(
@@ -64,6 +110,32 @@ class UserPlant {
       wateringDays: wateringDays,
       addedAt: now,
       lastWateredAt: lastWateredAt ?? now,
+      lightExposure: lightExposure,
+      potSize: potSize,
+    );
+  }
+  
+  UserPlant copyWith({
+    String? id,
+    int? catalogPlantId,
+    String? name,
+    int? wateringDays,
+    DateTime? addedAt,
+    DateTime? lastWateredAt,
+    LightExposure? lightExposure,
+    PotSize? potSize,
+    String? customNotes,
+  }) {
+    return UserPlant(
+      id: id ?? this.id,
+      catalogPlantId: catalogPlantId ?? this.catalogPlantId,
+      name: name ?? this.name,
+      wateringDays: wateringDays ?? this.wateringDays,
+      addedAt: addedAt ?? this.addedAt,
+      lastWateredAt: lastWateredAt ?? this.lastWateredAt,
+      lightExposure: lightExposure ?? this.lightExposure,
+      potSize: potSize ?? this.potSize,
+      customNotes: customNotes ?? this.customNotes,
     );
   }
 
