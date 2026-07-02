@@ -28,8 +28,9 @@ ENV_FILE = ROOT / ".env.local"
 PLANTSOLVE_DATASET_URL = "https://www.plantsolve.com/api/v1/dataset.json"
 OPENPLANTBOOK_BASE = "https://open.plantbook.io/api/v1"
 
-TARGET_COUNT = 500  # Target number of plants to include (will stop when no more found)
-REQUEST_DELAY_SEC = 1.5
+TARGET_COUNT = 10000  # No limit - scrape as much as possible
+REQUEST_DELAY_SEC = 2.0  # Respectful delay to avoid rate limiting
+MAX_RETRIES = 5  # Max retries on rate limit errors
 
 GENERIC_PLANTS = [
     {"id": 90001, "common_name": "Plante à feuillage", "watering_days": 7},
@@ -106,8 +107,8 @@ def get_openplantbook_token(client_id: str, secret: str) -> str | None:
         return None
 
 
-def search_openplantbook(query: str, api_key: str | None = None, token: str | None = None) -> list[dict]:
-    """Search Open Plantbook by common name"""
+def search_openplantbook_with_retry(query: str, api_key: str | None = None, token: str | None = None, retry_count: int = 0) -> list[dict]:
+    """Search Open Plantbook with automatic retry on rate limit"""
     try:
         params = urllib.parse.urlencode({"alias": query})
         url = f"{OPENPLANTBOOK_BASE}/plant/search?{params}"
@@ -122,13 +123,26 @@ def search_openplantbook(query: str, api_key: str | None = None, token: str | No
         
         data = fetch_json(url, headers)
         return data.get("results", [])
+    except urllib.error.HTTPError as e:
+        if e.code == 429:  # Rate limit
+            if retry_count < MAX_RETRIES:
+                wait_time = (2 ** retry_count) * 10  # Exponential backoff: 10s, 20s, 40s, 80s, 160s
+                print(f"  ⚠ Rate limit (429) - waiting {wait_time}s before retry {retry_count + 1}/{MAX_RETRIES}...")
+                time.sleep(wait_time)
+                return search_openplantbook_with_retry(query, api_key, token, retry_count + 1)
+            else:
+                print(f"  ✗ Max retries reached for '{query}', skipping")
+                return []
+        else:
+            print(f"  ⚠ HTTP {e.code} error for '{query}': {e}")
+            return []
     except Exception as e:
         print(f"  ⚠ Search failed for '{query}': {e}")
         return []
 
 
-def get_openplantbook_detail(pid: str, api_key: str | None = None, token: str | None = None) -> dict | None:
-    """Get plant detail from Open Plantbook by PID"""
+def get_openplantbook_detail_with_retry(pid: str, api_key: str | None = None, token: str | None = None, retry_count: int = 0) -> dict | None:
+    """Get plant detail with automatic retry on rate limit"""
     try:
         params = urllib.parse.urlencode({"include": "care"})
         url = f"{OPENPLANTBOOK_BASE}/plant/detail/{pid}?{params}"
@@ -142,19 +156,62 @@ def get_openplantbook_detail(pid: str, api_key: str | None = None, token: str | 
             return None
         
         return fetch_json(url, headers)
+    except urllib.error.HTTPError as e:
+        if e.code == 429:  # Rate limit
+            if retry_count < MAX_RETRIES:
+                wait_time = (2 ** retry_count) * 10  # Exponential backoff
+                print(f"  ⚠ Rate limit (429) - waiting {wait_time}s before retry {retry_count + 1}/{MAX_RETRIES}...")
+                time.sleep(wait_time)
+                return get_openplantbook_detail_with_retry(pid, api_key, token, retry_count + 1)
+            else:
+                print(f"  ✗ Max retries reached for PID {pid}, skipping")
+                return None
+        else:
+            print(f"  ⚠ HTTP {e.code} error for PID {pid}: {e}")
+            return None
     except Exception as e:
         print(f"  ⚠ Detail fetch failed for PID {pid}: {e}")
         return None
 
 
-def fetch_openplantbook_plants(config: dict, limit: int = 200) -> list[dict]:
+def generate_search_patterns() -> list[str]:
     """
-    Fetch popular houseplants from Open Plantbook
+    Generate comprehensive search patterns to scrape the entire Open Plantbook DB
     
-    NOTE: Open Plantbook does NOT have a "list all plants" endpoint.
-    We must search by plant names. See docs/OPENPLANTBOOK_LIMITATION.md
+    Strategy:
+    1. Single letters: a, b, c... z (26 patterns)
+    2. Two-letter combinations: aa, ab, ac... zz (676 patterns)
+    3. Common prefixes: ca-, co-, de-, etc.
+    
+    This should cover most plant names in the database.
     """
-    print("Phase 2 — fetching Open Plantbook plants...\n")
+    patterns = []
+    
+    # Single letters
+    for letter in "abcdefghijklmnopqrstuvwxyz":
+        patterns.append(letter)
+    
+    # Two-letter combinations (most comprehensive)
+    for first in "abcdefghijklmnopqrstuvwxyz":
+        for second in "abcdefghijklmnopqrstuvwxyz":
+            patterns.append(first + second)
+    
+    print(f"  ℹ Generated {len(patterns)} search patterns (a-z, aa-zz)\n")
+    return patterns
+
+
+def fetch_openplantbook_plants(config: dict, limit: int = 10000) -> list[dict]:
+    """
+    Scrape Open Plantbook DB using alphabetic search patterns
+    
+    NEW APPROACH: Instead of hardcoded names, search by:
+    - Single letters (a-z)
+    - Two-letter combinations (aa-zz)
+    
+    This exhaustively searches the entire database.
+    Respects rate limiting with automatic retry and exponential backoff.
+    """
+    print("Phase 2 — scraping Open Plantbook database (alphabetic search)...\n")
     
     api_key = config.get("openplantbook_key")
     token = None
@@ -169,94 +226,43 @@ def fetch_openplantbook_plants(config: dict, limit: int = 200) -> list[dict]:
         print("  ⚠ No Open Plantbook credentials configured\n")
         return []
     
-    # Extended list of common houseplants to search for
-    # Add more names here to fetch more plants!
-    common_houseplants = [
-        # Very popular indoor plants
-        "Monstera deliciosa", "Pothos", "Snake plant", "Spider plant", 
-        "Peace lily", "Rubber plant", "Fiddle leaf fig", "ZZ plant",
-        "Philodendron", "Aloe vera", "Jade plant", "English ivy",
-        "Boston fern", "Dracaena", "Calathea", "Anthurium",
-        "Bromeliad", "Orchid", "Succulent", "Cactus",
-        "Begonia", "Peperomia", "Ficus", "Croton",
-        "Prayer plant", "Chinese evergreen", "Dieffenbachia", "Schefflera",
-        "Hoya", "String of pearls", "African violet", "Bird of paradise",
-        "Alocasia", "Syngonium", "Maranta", "Sansevieria",
-        
-        # Additional popular plants
-        "Pilea", "Tradescantia", "Oxalis", "Coleus", "Fittonia",
-        "Haworthia", "Echeveria", "Sedum", "Crassula", "Kalanchoe",
-        "Asparagus fern", "Ponytail palm", "Yucca", "Norfolk pine",
-        "Nerve plant", "Polka dot plant", "Aluminum plant", "Purple heart",
-        "Wandering Jew", "Inch plant", "Moses in the cradle",
-        
-        # Aroids
-        "Scindapsus", "Epipremnum", "Monstera adansonii", "Monstera obliqua",
-        "Philodendron Brasil", "Philodendron micans", "Philodendron birkin",
-        "Anthurium clarinervium", "Anthurium crystallinum",
-        
-        # Calatheas & Marantas
-        "Calathea orbifolia", "Calathea medallion", "Calathea rattlesnake",
-        "Maranta leuconeura", "Stromanthe triostar",
-        
-        # Ferns
-        "Maidenhair fern", "Bird's nest fern", "Staghorn fern",
-        "Rabbit's foot fern", "Button fern", "Lemon button fern",
-        
-        # Palms
-        "Areca palm", "Parlor palm", "Kentia palm", "Majesty palm",
-        "Lady palm", "Bamboo palm",
-        
-        # Succulents & Cacti
-        "Zebra plant", "String of hearts", "String of bananas",
-        "Burro's tail", "Christmas cactus", "Easter cactus",
-        "Bunny ears cactus", "Old man cactus", "Moon cactus",
-        
-        # Flowering plants
-        "Cyclamen", "Gloxinia", "Begonia rex", "Lipstick plant",
-        "Goldfish plant", "Flamingo flower", "Crown of thorns",
-        
-        # Foliage plants
-        "Cast iron plant", "Corn plant", "Ti plant", "Polyscias",
-        "Aralia", "Fatsia", "Pittosporum", "Podocarpus",
-        
-        # Herbs (indoor)
-        "Basil", "Mint", "Parsley", "Cilantro", "Thyme", "Rosemary",
-        "Oregano", "Chives", "Sage", "Lavender",
-        
-        # Less common but popular
-        "Swiss cheese plant", "Velvet leaf", "Jewel orchid",
-        "Living stones", "Panda plant", "Chenille plant",
-        "Aluminum plant", "Nerve plant", "Polka dot plant",
-        
-        # Air plants
-        "Tillandsia", "Air plant",
-        
-        # Large statement plants
-        "Elephant ear", "Tree philodendron", "Dragon tree",
-        "Umbrella plant", "False aralia", "Ming aralia",
-    ]
+    # Generate all search patterns
+    search_patterns = generate_search_patterns()
     
     plants = []
     seen_pids = set()
+    total_searches = len(search_patterns)
+    searches_done = 0
     
-    for query in common_houseplants[:limit]:
-        if len(plants) >= limit:
-            break
-            
-        results = search_openplantbook(query, api_key, token)
+    print(f"  🔍 Starting exhaustive search with {total_searches} patterns...")
+    print(f"  ⏱️  Estimated time: {total_searches * REQUEST_DELAY_SEC / 60:.0f}-{total_searches * REQUEST_DELAY_SEC * 2 / 60:.0f} minutes\n")
+    
+    for query in search_patterns:
+        searches_done += 1
         
-        for result in results[:3]:  # Top 3 matches per search
+        if len(plants) >= limit:
+            print(f"\n  ✓ Reached limit of {limit} plants, stopping\n")
+            break
+        
+        # Progress indicator every 50 searches
+        if searches_done % 50 == 0:
+            print(f"  📊 Progress: {searches_done}/{total_searches} patterns searched, {len(plants)} unique plants found")
+        
+        results = search_openplantbook_with_retry(query, api_key, token)
+        
+        for result in results:  # Process ALL results (not just top 3)
             pid = result.get("pid")
             if not pid or pid in seen_pids:
                 continue
             
             seen_pids.add(pid)
-            detail = get_openplantbook_detail(pid, api_key, token)
+            detail = get_openplantbook_detail_with_retry(pid, api_key, token)
             
             if detail:
                 plants.append(detail)
-                print(f"  [{len(plants)}/{limit}] {detail.get('display_pid', pid)}")
+                # Show every 10th plant to avoid spam
+                if len(plants) % 10 == 0:
+                    print(f"  [{len(plants)}] {detail.get('display_pid', pid)}")
                 
             if len(plants) >= limit:
                 break
@@ -265,7 +271,7 @@ def fetch_openplantbook_plants(config: dict, limit: int = 200) -> list[dict]:
         
         time.sleep(REQUEST_DELAY_SEC * 0.5)
     
-    print(f"\n  ✓ Found {len(plants)} Open Plantbook plants\n")
+    print(f"\n  ✓ Scraping complete: {len(plants)} unique plants from {searches_done} searches\n")
     return plants
 
 

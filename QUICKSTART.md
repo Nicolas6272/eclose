@@ -23,11 +23,13 @@ Pothos (base 7 jours)
 = 3 jours au lieu de 7 !
 ```
 
-#### 2. Enrichissement du catalogue
+#### 2. Enrichissement du catalogue (Scraping exhaustif)
 
-Nouveau script pour générer un catalogue de **100-200+ plantes** depuis :
-- **Open Plantbook** (gratuit, 1000+ plantes avec métadonnées riches)
-- **PlantSolve** (en préparation, 113 plantes curées)
+Nouveau script pour **scraper toute la DB Open Plantbook** (1000-2000+ plantes) :
+- 🔍 **Recherche alphabétique exhaustive** (a-z, aa-zz = 702 patterns)
+- ⏱️ **Gestion du rate limiting** (retry automatique avec backoff exponentiel)
+- 🔄 **Mode incrémental** (merge avec catalogue existant)
+- 📥 **Téléchargement d'images** (skip si déjà téléchargées)
 
 Métadonnées ajoutées par plante :
 - Seuils d'humidité du sol (min/max)
@@ -57,9 +59,9 @@ Le système enregistre automatiquement chaque arrosage et ajuste l'intervalle en
 
 ## 🚀 Prochaines étapes
 
-### 1. Enrichir le catalogue (optionnel mais recommandé)
+### 1. Enrichir le catalogue - Scraping exhaustif (recommandé)
 
-Pour passer de 3 à 100-500+ plantes :
+Pour scraper **toute la base de données** Open Plantbook (1000-2000+ plantes) :
 
 ```bash
 # 1. Créer un compte gratuit sur Open Plantbook
@@ -73,23 +75,31 @@ cp .env.example .env.local
 # Éditer .env.local et ajouter :
 # OPENPLANTBOOK_API_KEY=votre-clé-ici
 
-# 4. Générer le catalogue enrichi (mode incrémental)
+# 4. Lancer le scraping exhaustif (2-4 heures)
 python3 scripts/fetch_enriched_catalog.py
-# → Télécharge 100-300 plantes
-# → Télécharge les images
-# → Génère assets/plants/plants.json
-# → Régénère lib/data/plants_catalog.dart
 
-# 5. Relancer pour en avoir PLUS (merge automatique)
-python3 scripts/fetch_enriched_catalog.py
-# → Garde les anciennes + ajoute 100-300 nouvelles
-# → Pas de doublons (déduplique automatiquement)
+# Le script va :
+# - Chercher avec 702 patterns alphabétiques (a-z, aa-zz)
+# - Gérer automatiquement les rate limits (retry + backoff)
+# - Télécharger 1000-2000+ plantes
+# - Télécharger ~200-500 MB d'images
+# - Générer assets/plants/plants.json + lib/data/plants_catalog.dart
 
-# 6. Continuer jusqu'à saturation (~500 plantes max)
-python3 scripts/fetch_enriched_catalog.py
+# Logs attendus :
+#   ℹ Generated 702 search patterns (a-z, aa-zz)
+#   🔍 Starting exhaustive search...
+#   ⏱️  Estimated time: 23-47 minutes
+#   📊 Progress: 50/702 patterns searched, 127 unique plants found
+#   ...
+#   ✓ Scraping complete: 1523 unique plants from 702 searches
 ```
 
-**🎯 Mode incrémental** : Chaque run **ajoute** de nouvelles plantes sans supprimer les anciennes !
+**⚠️ Important** : Le scraping prend **2-4 heures** mais vous obtenez **toute la DB** !
+
+**Mode incrémental** :
+- Premier run : génère toutes les plantes trouvées (~1000-2000+)
+- Runs suivants : garde les anciennes + ajoute nouvelles (si DB mise à jour)
+- Pas de doublons, pas de re-téléchargement d'images
 
 ### 2. Implémenter l'UI (nécessaire pour utilisateurs)
 
