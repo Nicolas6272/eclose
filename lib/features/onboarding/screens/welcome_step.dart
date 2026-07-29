@@ -113,7 +113,7 @@ class _WelcomeStepState extends State<WelcomeStep>
                   ),
                   const SizedBox(height: 20),
                   Text(
-                    'L\'app qui t\'aide à ne jamais oublier d\'arroser tes plantes.',
+                    'Ajoute une première plante, on te dira quand l\'arroser.',
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                           fontSize: 17,
                           height: 1.55,

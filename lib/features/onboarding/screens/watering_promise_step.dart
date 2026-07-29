@@ -3,23 +3,25 @@ import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../../../core/theme/app_theme.dart';
-import '../../../data/models/catalog_plant.dart';
-import '../../../data/models/user_plant.dart';
-import '../../../data/user_plants_repository.dart';
+import '../../../core/utils/date_format.dart';
+import '../../../data/models/catalog_crop.dart';
+import '../../../data/models/user_crop.dart';
+import '../../../data/user_crops_repository.dart';
+import '../../crops/screens/home_screen.dart';
 import '../widgets/plant_added_badge.dart';
-import '../widgets/watering_timeline.dart';
-import '../../plants/screens/home_screen.dart';
 
 class WateringPromiseStep extends StatefulWidget {
   const WateringPromiseStep({
     super.key,
     required this.repository,
-    required this.plant,
+    required this.crop,
+    required this.plantedAt,
     required this.lastWateredAt,
   });
 
-  final UserPlantsRepository repository;
-  final CatalogPlant plant;
+  final UserCropsRepository repository;
+  final CatalogCrop crop;
+  final DateTime plantedAt;
   final DateTime lastWateredAt;
 
   @override
@@ -31,37 +33,30 @@ class _WateringPromiseStepState extends State<WateringPromiseStep>
   late final AnimationController _controller;
   late final Animation<double> _contentOpacity;
   late final Animation<Offset> _contentSlide;
-  late final Animation<double> _timelineProgress;
+  bool _isFinishing = false;
 
   @override
   void initState() {
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 1400),
+      duration: const Duration(milliseconds: 900),
     );
 
     _contentOpacity = Tween<double>(begin: 0, end: 1).animate(
       CurvedAnimation(
         parent: _controller,
-        curve: const Interval(0.35, 0.75, curve: Curves.easeOut),
+        curve: const Interval(0.2, 0.85, curve: Curves.easeOut),
       ),
     );
 
     _contentSlide = Tween<Offset>(
-      begin: const Offset(0, 0.05),
+      begin: const Offset(0, 0.04),
       end: Offset.zero,
     ).animate(
       CurvedAnimation(
         parent: _controller,
-        curve: const Interval(0.35, 0.75, curve: Curves.easeOutCubic),
-      ),
-    );
-
-    _timelineProgress = Tween<double>(begin: 0, end: 1).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: const Interval(0.55, 1, curve: Curves.easeOutCubic),
+        curve: const Interval(0.2, 0.85, curve: Curves.easeOutCubic),
       ),
     );
     _controller.forward();
@@ -73,16 +68,30 @@ class _WateringPromiseStepState extends State<WateringPromiseStep>
     super.dispose();
   }
 
-  Future<void> _finish(BuildContext context, {required bool requestNotifications}) async {
+  String _nextWateringHeadline(UserCrop preview) {
+    final due = preview.isDue(widget.crop);
+    final days = preview.daysUntilWatering(widget.crop);
+    final next = preview.nextWateringAt(widget.crop);
+
+    if (due) return 'À arroser dès aujourd\'hui';
+    if (days == 1) return 'Prochain arrosage demain';
+    return 'Prochain arrosage le ${formatFrenchDate(next)}';
+  }
+
+  Future<void> _finish({required bool requestNotifications}) async {
+    if (_isFinishing) return;
+    setState(() => _isFinishing = true);
+
     if (requestNotifications &&
         !kIsWeb &&
         defaultTargetPlatform != TargetPlatform.macOS) {
+      // Soft-ask already accepted: only now fire the one-shot OS prompt.
       await Permission.notification.request();
     }
 
     await widget.repository.completeOnboarding();
 
-    if (!context.mounted) return;
+    if (!mounted) return;
 
     Navigator.of(context).pushAndRemoveUntil(
       MaterialPageRoute(
@@ -94,78 +103,111 @@ class _WateringPromiseStepState extends State<WateringPromiseStep>
 
   @override
   Widget build(BuildContext context) {
-    final plantName = widget.plant.commonName;
-    final previewPlant = UserPlant.fromCatalog(
+    final preview = UserCrop.fromCatalog(
       id: 'preview',
-      catalogPlantId: widget.plant.id,
-      name: widget.plant.commonName,
-      wateringDays: widget.plant.wateringDays,
+      catalog: widget.crop,
+      plantedAt: widget.plantedAt,
       lastWateredAt: widget.lastWateredAt,
     );
-    final daysUntilWatering = previewPlant.daysUntilWatering;
-    final nextWateringDate = previewPlant.nextWateringAt;
+    final headline = _nextWateringHeadline(preview);
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 32),
+      padding: const EdgeInsets.symmetric(horizontal: 28),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           const Spacer(flex: 2),
           const Center(child: PlantAddedBadge()),
-          const SizedBox(height: 32),
+          const SizedBox(height: 28),
           FadeTransition(
             opacity: _contentOpacity,
             child: SlideTransition(
               position: _contentSlide,
-              child: Text(
-                'Ton $plantName a bien été ajouté.',
-                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                      fontSize: 26,
-                      height: 1.3,
+              child: Column(
+                children: [
+                  Text(
+                    widget.crop.savedConfirmation,
+                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                          fontSize: 24,
+                          height: 1.3,
+                        ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    headline,
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                          fontSize: 22,
+                          height: 1.3,
+                          color: terracotta,
+                          fontWeight: FontWeight.w700,
+                        ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 28),
+                  // Soft-ask: explain value before the one-shot OS prompt.
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(18),
+                    decoration: BoxDecoration(
+                      color: sauge.withValues(alpha: 0.12),
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(
+                        color: sauge.withValues(alpha: 0.28),
+                      ),
                     ),
-                textAlign: TextAlign.center,
+                    child: Column(
+                      children: [
+                        const Icon(
+                          Icons.notifications_active_outlined,
+                          color: sauge,
+                          size: 28,
+                        ),
+                        const SizedBox(height: 12),
+                        Text(
+                          'Active les notifications pour recevoir un rappel le jour de l\'arrosage.',
+                          style:
+                              Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                    fontSize: 16,
+                                    height: 1.45,
+                                    color: vertProfond.withValues(alpha: 0.75),
+                                  ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
-            ),
-          ),
-          const SizedBox(height: 28),
-          FadeTransition(
-            opacity: _contentOpacity,
-            child: AnimatedBuilder(
-              animation: _timelineProgress,
-              builder: (context, _) => WateringTimeline(
-                daysUntilWatering: daysUntilWatering,
-                nextWateringDate: nextWateringDate,
-                progress: _timelineProgress.value,
-              ),
-            ),
-          ),
-          const SizedBox(height: 24),
-          FadeTransition(
-            opacity: _contentOpacity,
-            child: Text(
-            'Pour qu\'on puisse te rappeler de l\'arroser, pense à activer les notifications.',
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  fontSize: 17,
-                  height: 1.55,
-                  color: vertProfond.withValues(alpha: 0.6),
-                ),
-            textAlign: TextAlign.center,
             ),
           ),
           const Spacer(flex: 3),
           FilledButton(
-            onPressed: () => _finish(context, requestNotifications: true),
-            child: const Text('Activer les notifications'),
+            onPressed: _isFinishing
+                ? null
+                : () => _finish(requestNotifications: true),
+            child: _isFinishing
+                ? const SizedBox(
+                    width: 22,
+                    height: 22,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: Colors.white,
+                    ),
+                  )
+                : const Text('Activer les notifications'),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 8),
           TextButton(
-            onPressed: () => _finish(context, requestNotifications: false),
+            onPressed: _isFinishing
+                ? null
+                : () => _finish(requestNotifications: false),
             child: Text(
-              'Plus tard',
+              'Continuer sans notifications',
               style: TextStyle(color: vertProfond.withValues(alpha: 0.45)),
             ),
           ),
-          const SizedBox(height: 32),
+          const SizedBox(height: 28),
         ],
       ),
     );

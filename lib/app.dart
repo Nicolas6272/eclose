@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'core/theme/app_theme.dart';
-import 'data/user_plants_repository.dart';
+import 'data/user_crops_repository.dart';
+import 'features/crops/screens/home_screen.dart';
 import 'features/onboarding/onboarding_flow.dart';
-import 'features/plants/screens/home_screen.dart';
 
 class EcloseApp extends StatelessWidget {
   const EcloseApp({super.key, required this.repository});
 
-  final UserPlantsRepository repository;
+  final UserCropsRepository repository;
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +32,7 @@ class EcloseApp extends StatelessWidget {
 class _AppEntry extends StatefulWidget {
   const _AppEntry({required this.repository});
 
-  final UserPlantsRepository repository;
+  final UserCropsRepository repository;
 
   @override
   State<_AppEntry> createState() => _AppEntryState();

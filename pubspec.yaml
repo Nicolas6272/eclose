@@ -1,5 +1,5 @@
 name: eclose
-description: "Rappels d'arrosage fiables et honnêtes."
+description: "Savoir quoi arroser aujourd'hui dans son potager."
 publish_to: 'none'
 version: 0.1.0+1
 
@@ -24,3 +24,5 @@ flutter:
   uses-material-design: true
   assets:
     - assets/plants/images/
+    - assets/crops/
+    - assets/crops/images/

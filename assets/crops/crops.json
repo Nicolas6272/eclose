@@ -1,0 +1,2735 @@
+[
+  {
+    "id": 1,
+    "name_fr": "Tomate",
+    "scientific_name": "Solanum lycopersicum",
+    "category": "legume",
+    "gender": "f",
+    "water_need": "high",
+    "base_interval_days": 2,
+    "seedling_factor": 0.5,
+    "seedling_days": 21,
+    "search_keywords": [
+      "tomate",
+      "tomato",
+      "solanum"
+    ],
+    "image": "assets/crops/images/legume.png",
+    "image_slug": "tomate"
+  },
+  {
+    "id": 2,
+    "name_fr": "Tomate cerise",
+    "scientific_name": "Solanum lycopersicum",
+    "category": "legume",
+    "gender": "f",
+    "water_need": "high",
+    "base_interval_days": 2,
+    "seedling_factor": 0.5,
+    "seedling_days": 21,
+    "search_keywords": [
+      "tomate cerise",
+      "cherry tomato",
+      "cocktail"
+    ],
+    "image": "assets/crops/images/legume.png",
+    "image_slug": "tomate_cerise"
+  },
+  {
+    "id": 3,
+    "name_fr": "Tomatillo",
+    "scientific_name": "Physalis philadelphica",
+    "category": "legume",
+    "gender": "m",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 21,
+    "search_keywords": [
+      "tomatillo",
+      "physalis",
+      "cerise de terre verte"
+    ],
+    "image": "assets/crops/images/legume.png",
+    "image_slug": "tomatillo"
+  },
+  {
+    "id": 4,
+    "name_fr": "Cerise de terre",
+    "scientific_name": "Physalis pruinosa",
+    "category": "legume",
+    "gender": "f",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 21,
+    "search_keywords": [
+      "cerise de terre",
+      "physalis",
+      "ground cherry",
+      "goldie"
+    ],
+    "image": "assets/crops/images/legume.png",
+    "image_slug": "cerise_de_terre"
+  },
+  {
+    "id": 5,
+    "name_fr": "Courgette",
+    "scientific_name": "Cucurbita pepo",
+    "category": "legume",
+    "gender": "f",
+    "water_need": "high",
+    "base_interval_days": 2,
+    "seedling_factor": 0.5,
+    "seedling_days": 14,
+    "search_keywords": [
+      "courgette",
+      "zucchini",
+      "squash"
+    ],
+    "image": "assets/crops/images/legume.png",
+    "image_slug": "courgette"
+  },
+  {
+    "id": 6,
+    "name_fr": "Courge poivrée",
+    "scientific_name": "Cucurbita pepo",
+    "category": "legume",
+    "gender": "f",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 14,
+    "search_keywords": [
+      "courge poivrée",
+      "acorn squash",
+      "pâtisson"
+    ],
+    "image": "assets/crops/images/legume.png",
+    "image_slug": "courge_poivree"
+  },
+  {
+    "id": 7,
+    "name_fr": "Courge spaghetti",
+    "scientific_name": "Cucurbita pepo",
+    "category": "legume",
+    "gender": "f",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 14,
+    "search_keywords": [
+      "courge spaghetti",
+      "spaghetti squash"
+    ],
+    "image": "assets/crops/images/legume.png",
+    "image_slug": "courge_spaghetti"
+  },
+  {
+    "id": 8,
+    "name_fr": "Concombre",
+    "scientific_name": "Cucumis sativus",
+    "category": "legume",
+    "gender": "m",
+    "water_need": "high",
+    "base_interval_days": 2,
+    "seedling_factor": 0.5,
+    "seedling_days": 14,
+    "search_keywords": [
+      "concombre",
+      "cucumber"
+    ],
+    "image": "assets/crops/images/legume.png",
+    "image_slug": "concombre"
+  },
+  {
+    "id": 9,
+    "name_fr": "Concombre à confire",
+    "scientific_name": "Melothria scabra",
+    "category": "legume",
+    "gender": "m",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 14,
+    "search_keywords": [
+      "concombre à confire",
+      "cucamelon",
+      "melothria",
+      "sour gherkin"
+    ],
+    "image": "assets/crops/images/legume.png",
+    "image_slug": "concombre_a_confire"
+  },
+  {
+    "id": 10,
+    "name_fr": "Aubergine",
+    "scientific_name": "Solanum melongena",
+    "category": "legume",
+    "gender": "f",
+    "water_need": "high",
+    "base_interval_days": 2,
+    "seedling_factor": 0.5,
+    "seedling_days": 21,
+    "search_keywords": [
+      "aubergine",
+      "eggplant"
+    ],
+    "image": "assets/crops/images/legume.png",
+    "image_slug": "aubergine"
+  },
+  {
+    "id": 11,
+    "name_fr": "Poivron",
+    "scientific_name": "Capsicum annuum",
+    "category": "legume",
+    "gender": "m",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 21,
+    "search_keywords": [
+      "poivron",
+      "pepper",
+      "bell pepper"
+    ],
+    "image": "assets/crops/images/legume.png",
+    "image_slug": "poivron"
+  },
+  {
+    "id": 12,
+    "name_fr": "Piment",
+    "scientific_name": "Capsicum annuum",
+    "category": "legume",
+    "gender": "m",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 21,
+    "search_keywords": [
+      "piment",
+      "chili",
+      "jalapeño",
+      "espelette"
+    ],
+    "image": "assets/crops/images/legume.png",
+    "image_slug": "piment"
+  },
+  {
+    "id": 13,
+    "name_fr": "Piment fort",
+    "scientific_name": "Capsicum chinense",
+    "category": "legume",
+    "gender": "m",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 21,
+    "search_keywords": [
+      "piment fort",
+      "habanero",
+      "bhut jolokia",
+      "carolina reaper"
+    ],
+    "image": "assets/crops/images/legume.png",
+    "image_slug": "piment_fort"
+  },
+  {
+    "id": 14,
+    "name_fr": "Piment aji",
+    "scientific_name": "Capsicum baccatum",
+    "category": "legume",
+    "gender": "m",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 21,
+    "search_keywords": [
+      "aji",
+      "piment aji",
+      "baccatum"
+    ],
+    "image": "assets/crops/images/legume.png",
+    "image_slug": "piment_aji"
+  },
+  {
+    "id": 15,
+    "name_fr": "Haricot vert",
+    "scientific_name": "Phaseolus vulgaris",
+    "category": "legume",
+    "gender": "m",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 14,
+    "search_keywords": [
+      "haricot",
+      "haricot vert",
+      "bean",
+      "green bean"
+    ],
+    "image": "assets/crops/images/legume.png",
+    "image_slug": "haricot_vert"
+  },
+  {
+    "id": 16,
+    "name_fr": "Haricot nain",
+    "scientific_name": "Phaseolus vulgaris",
+    "category": "legume",
+    "gender": "m",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 14,
+    "search_keywords": [
+      "haricot nain",
+      "bush bean"
+    ],
+    "image": "assets/crops/images/legume.png",
+    "image_slug": "haricot_nain"
+  },
+  {
+    "id": 17,
+    "name_fr": "Haricot d'Espagne",
+    "scientific_name": "Phaseolus coccineus",
+    "category": "legume",
+    "gender": "m",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 14,
+    "search_keywords": [
+      "haricot d'espagne",
+      "scarlet runner",
+      "haricot écarlate"
+    ],
+    "image": "assets/crops/images/legume.png",
+    "image_slug": "haricot_despagne"
+  },
+  {
+    "id": 18,
+    "name_fr": "Haricot de Lima",
+    "scientific_name": "Phaseolus lunatus",
+    "category": "legume",
+    "gender": "m",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 14,
+    "search_keywords": [
+      "lima",
+      "haricot de lima",
+      "butter bean"
+    ],
+    "image": "assets/crops/images/legume.png",
+    "image_slug": "haricot_de_lima"
+  },
+  {
+    "id": 19,
+    "name_fr": "Haricot km",
+    "scientific_name": "Vigna unguiculata",
+    "category": "legume",
+    "gender": "m",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 14,
+    "search_keywords": [
+      "haricot km",
+      "dolique",
+      "yard long bean",
+      "niébé"
+    ],
+    "image": "assets/crops/images/legume.png",
+    "image_slug": "haricot_km"
+  },
+  {
+    "id": 20,
+    "name_fr": "Fève",
+    "scientific_name": "Vicia faba",
+    "category": "legume",
+    "gender": "f",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 14,
+    "search_keywords": [
+      "fève",
+      "fava",
+      "broad bean"
+    ],
+    "image": "assets/crops/images/legume.png",
+    "image_slug": "feve"
+  },
+  {
+    "id": 21,
+    "name_fr": "Soja",
+    "scientific_name": "Glycine max",
+    "category": "legume",
+    "gender": "m",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 14,
+    "search_keywords": [
+      "soja",
+      "edamame",
+      "soybean"
+    ],
+    "image": "assets/crops/images/legume.png",
+    "image_slug": "soja"
+  },
+  {
+    "id": 22,
+    "name_fr": "Petit pois",
+    "scientific_name": "Pisum sativum",
+    "category": "legume",
+    "gender": "m",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 14,
+    "search_keywords": [
+      "pois",
+      "petit pois",
+      "pea"
+    ],
+    "image": "assets/crops/images/legume.png",
+    "image_slug": "petit_pois"
+  },
+  {
+    "id": 23,
+    "name_fr": "Pois mange-tout",
+    "scientific_name": "Pisum sativum",
+    "category": "legume",
+    "gender": "m",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 14,
+    "search_keywords": [
+      "mange-tout",
+      "snow pea",
+      "sugar snap"
+    ],
+    "image": "assets/crops/images/legume.png",
+    "image_slug": "pois_mange_tout"
+  },
+  {
+    "id": 24,
+    "name_fr": "Laitue",
+    "scientific_name": "Lactuca sativa",
+    "category": "legume",
+    "gender": "f",
+    "water_need": "high",
+    "base_interval_days": 2,
+    "seedling_factor": 0.5,
+    "seedling_days": 14,
+    "search_keywords": [
+      "laitue",
+      "lettuce",
+      "salade"
+    ],
+    "image": "assets/crops/images/legume.png",
+    "image_slug": "laitue"
+  },
+  {
+    "id": 25,
+    "name_fr": "Batavia",
+    "scientific_name": "Lactuca sativa",
+    "category": "legume",
+    "gender": "f",
+    "water_need": "high",
+    "base_interval_days": 2,
+    "seedling_factor": 0.5,
+    "seedling_days": 14,
+    "search_keywords": [
+      "batavia",
+      "laitue batavia"
+    ],
+    "image": "assets/crops/images/legume.png",
+    "image_slug": "batavia"
+  },
+  {
+    "id": 26,
+    "name_fr": "Roquette",
+    "scientific_name": "Eruca sativa",
+    "category": "legume",
+    "gender": "f",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 10,
+    "search_keywords": [
+      "roquette",
+      "arugula",
+      "rucola",
+      "eruca"
+    ],
+    "image": "assets/crops/images/legume.png",
+    "image_slug": "roquette"
+  },
+  {
+    "id": 27,
+    "name_fr": "Roquette sauvage",
+    "scientific_name": "Diplotaxis tenuifolia",
+    "category": "legume",
+    "gender": "f",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 10,
+    "search_keywords": [
+      "roquette sauvage",
+      "wild rocket",
+      "diplotaxis"
+    ],
+    "image": "assets/crops/images/legume.png",
+    "image_slug": "roquette_sauvage"
+  },
+  {
+    "id": 28,
+    "name_fr": "Mâche",
+    "scientific_name": "Valerianella locusta",
+    "category": "legume",
+    "gender": "f",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 14,
+    "search_keywords": [
+      "mâche",
+      "lamb's lettuce",
+      "corn salad"
+    ],
+    "image": "assets/crops/images/legume.png",
+    "image_slug": "mache"
+  },
+  {
+    "id": 29,
+    "name_fr": "Épinard",
+    "scientific_name": "Spinacia oleracea",
+    "category": "legume",
+    "gender": "m",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 14,
+    "search_keywords": [
+      "épinard",
+      "epinard",
+      "spinach"
+    ],
+    "image": "assets/crops/images/legume.png",
+    "image_slug": "epinard"
+  },
+  {
+    "id": 30,
+    "name_fr": "Blette",
+    "scientific_name": "Beta vulgaris",
+    "category": "legume",
+    "gender": "f",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 14,
+    "search_keywords": [
+      "blette",
+      "cote de bette",
+      "chard",
+      "swiss chard"
+    ],
+    "image": "assets/crops/images/legume.png",
+    "image_slug": "blette"
+  },
+  {
+    "id": 31,
+    "name_fr": "Betterave",
+    "scientific_name": "Beta vulgaris",
+    "category": "legume",
+    "gender": "f",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 14,
+    "search_keywords": [
+      "betterave",
+      "beet",
+      "beetroot"
+    ],
+    "image": "assets/crops/images/legume.png",
+    "image_slug": "betterave"
+  },
+  {
+    "id": 32,
+    "name_fr": "Chou cabus",
+    "scientific_name": "Brassica oleracea",
+    "category": "legume",
+    "gender": "m",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 21,
+    "search_keywords": [
+      "chou",
+      "chou cabus",
+      "cabbage"
+    ],
+    "image": "assets/crops/images/legume.png",
+    "image_slug": "chou_cabus"
+  },
+  {
+    "id": 33,
+    "name_fr": "Chou kale",
+    "scientific_name": "Brassica oleracea",
+    "category": "legume",
+    "gender": "m",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 21,
+    "search_keywords": [
+      "kale",
+      "chou kale",
+      "chou frisé"
+    ],
+    "image": "assets/crops/images/legume.png",
+    "image_slug": "chou_kale"
+  },
+  {
+    "id": 34,
+    "name_fr": "Brocoli",
+    "scientific_name": "Brassica oleracea",
+    "category": "legume",
+    "gender": "m",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 21,
+    "search_keywords": [
+      "brocoli",
+      "broccoli"
+    ],
+    "image": "assets/crops/images/legume.png",
+    "image_slug": "brocoli"
+  },
+  {
+    "id": 35,
+    "name_fr": "Chou-fleur",
+    "scientific_name": "Brassica oleracea",
+    "category": "legume",
+    "gender": "m",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 21,
+    "search_keywords": [
+      "chou-fleur",
+      "chou fleur",
+      "cauliflower"
+    ],
+    "image": "assets/crops/images/legume.png",
+    "image_slug": "chou_fleur"
+  },
+  {
+    "id": 36,
+    "name_fr": "Chou de Bruxelles",
+    "scientific_name": "Brassica oleracea",
+    "category": "legume",
+    "gender": "m",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 21,
+    "search_keywords": [
+      "chou de bruxelles",
+      "brussels sprouts"
+    ],
+    "image": "assets/crops/images/legume.png",
+    "image_slug": "chou_de_bruxelles"
+  },
+  {
+    "id": 37,
+    "name_fr": "Chou-rave",
+    "scientific_name": "Brassica oleracea",
+    "category": "legume",
+    "gender": "m",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 21,
+    "search_keywords": [
+      "chou-rave",
+      "kohlrabi"
+    ],
+    "image": "assets/crops/images/legume.png",
+    "image_slug": "chou_rave"
+  },
+  {
+    "id": 38,
+    "name_fr": "Chou chinois",
+    "scientific_name": "Brassica rapa",
+    "category": "legume",
+    "gender": "m",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 14,
+    "search_keywords": [
+      "chou chinois",
+      "pak choi",
+      "bok choy",
+      "pe-tsaï"
+    ],
+    "image": "assets/crops/images/legume.png",
+    "image_slug": "chou_chinois"
+  },
+  {
+    "id": 39,
+    "name_fr": "Mizuna",
+    "scientific_name": "Brassica rapa",
+    "category": "legume",
+    "gender": "m",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 10,
+    "search_keywords": [
+      "mizuna",
+      "moutarde japonaise"
+    ],
+    "image": "assets/crops/images/legume.png",
+    "image_slug": "mizuna"
+  },
+  {
+    "id": 40,
+    "name_fr": "Moutarde",
+    "scientific_name": "Brassica juncea",
+    "category": "legume",
+    "gender": "f",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 10,
+    "search_keywords": [
+      "moutarde",
+      "mustard greens",
+      "moutarde brune"
+    ],
+    "image": "assets/crops/images/legume.png",
+    "image_slug": "moutarde"
+  },
+  {
+    "id": 41,
+    "name_fr": "Chou d'Éthiopie",
+    "scientific_name": "Brassica carinata",
+    "category": "legume",
+    "gender": "m",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 14,
+    "search_keywords": [
+      "chou d'éthiopie",
+      "amara",
+      "carinata"
+    ],
+    "image": "assets/crops/images/legume.png",
+    "image_slug": "chou_dethiopie"
+  },
+  {
+    "id": 42,
+    "name_fr": "Rutabaga",
+    "scientific_name": "Brassica napus",
+    "category": "legume",
+    "gender": "m",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 21,
+    "search_keywords": [
+      "rutabaga",
+      "chou-navet",
+      "swede"
+    ],
+    "image": "assets/crops/images/legume.png",
+    "image_slug": "rutabaga"
+  },
+  {
+    "id": 43,
+    "name_fr": "Radis",
+    "scientific_name": "Raphanus sativus",
+    "category": "legume",
+    "gender": "m",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 7,
+    "search_keywords": [
+      "radis",
+      "radish"
+    ],
+    "image": "assets/crops/images/legume.png",
+    "image_slug": "radis"
+  },
+  {
+    "id": 44,
+    "name_fr": "Radis noir",
+    "scientific_name": "Raphanus sativus",
+    "category": "legume",
+    "gender": "m",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 14,
+    "search_keywords": [
+      "radis noir",
+      "daikon",
+      "radis d'hiver"
+    ],
+    "image": "assets/crops/images/legume.png",
+    "image_slug": "radis_noir"
+  },
+  {
+    "id": 45,
+    "name_fr": "Carotte",
+    "scientific_name": "Daucus carota",
+    "category": "legume",
+    "gender": "f",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 21,
+    "search_keywords": [
+      "carotte",
+      "carrot"
+    ],
+    "image": "assets/crops/images/legume.png",
+    "image_slug": "carotte"
+  },
+  {
+    "id": 46,
+    "name_fr": "Navet",
+    "scientific_name": "Brassica rapa",
+    "category": "legume",
+    "gender": "m",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 14,
+    "search_keywords": [
+      "navet",
+      "turnip"
+    ],
+    "image": "assets/crops/images/legume.png",
+    "image_slug": "navet"
+  },
+  {
+    "id": 47,
+    "name_fr": "Panais",
+    "scientific_name": "Pastinaca sativa",
+    "category": "legume",
+    "gender": "m",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 21,
+    "search_keywords": [
+      "panais",
+      "parsnip"
+    ],
+    "image": "assets/crops/images/legume.png",
+    "image_slug": "panais"
+  },
+  {
+    "id": 48,
+    "name_fr": "Pomme de terre",
+    "scientific_name": "Solanum tuberosum",
+    "category": "legume",
+    "gender": "f",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 21,
+    "search_keywords": [
+      "pomme de terre",
+      "patate",
+      "potato"
+    ],
+    "image": "assets/crops/images/legume.png",
+    "image_slug": "pomme_de_terre"
+  },
+  {
+    "id": 49,
+    "name_fr": "Patate douce",
+    "scientific_name": "Ipomoea batatas",
+    "category": "legume",
+    "gender": "f",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 21,
+    "search_keywords": [
+      "patate douce",
+      "sweet potato",
+      "igname douce"
+    ],
+    "image": "assets/crops/images/legume.png",
+    "image_slug": "patate_douce"
+  },
+  {
+    "id": 50,
+    "name_fr": "Bardane",
+    "scientific_name": "Arctium lappa",
+    "category": "legume",
+    "gender": "f",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 21,
+    "search_keywords": [
+      "bardane",
+      "gobo",
+      "burdock"
+    ],
+    "image": "assets/crops/images/legume.png",
+    "image_slug": "bardane"
+  },
+  {
+    "id": 51,
+    "name_fr": "Courge butternut",
+    "scientific_name": "Cucurbita moschata",
+    "category": "legume",
+    "gender": "f",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 14,
+    "search_keywords": [
+      "butternut",
+      "courge",
+      "squash",
+      "musquée"
+    ],
+    "image": "assets/crops/images/legume.png",
+    "image_slug": "courge_butternut"
+  },
+  {
+    "id": 52,
+    "name_fr": "Potiron",
+    "scientific_name": "Cucurbita maxima",
+    "category": "legume",
+    "gender": "m",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 14,
+    "search_keywords": [
+      "potiron",
+      "citrouille",
+      "pumpkin",
+      "hubbard"
+    ],
+    "image": "assets/crops/images/legume.png",
+    "image_slug": "potiron"
+  },
+  {
+    "id": 53,
+    "name_fr": "Courge cushaw",
+    "scientific_name": "Cucurbita argyrosperma",
+    "category": "legume",
+    "gender": "f",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 14,
+    "search_keywords": [
+      "cushaw",
+      "courge cushaw"
+    ],
+    "image": "assets/crops/images/legume.png",
+    "image_slug": "courge_cushaw"
+  },
+  {
+    "id": 54,
+    "name_fr": "Gombo",
+    "scientific_name": "Abelmoschus esculentus",
+    "category": "legume",
+    "gender": "m",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 14,
+    "search_keywords": [
+      "gombo",
+      "okra",
+      "abelmoschus"
+    ],
+    "image": "assets/crops/images/legume.png",
+    "image_slug": "gombo"
+  },
+  {
+    "id": 55,
+    "name_fr": "Gourde",
+    "scientific_name": "Lagenaria siceraria",
+    "category": "legume",
+    "gender": "f",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 14,
+    "search_keywords": [
+      "gourde",
+      "calebasse",
+      "bottle gourd"
+    ],
+    "image": "assets/crops/images/legume.png",
+    "image_slug": "gourde"
+  },
+  {
+    "id": 56,
+    "name_fr": "Luffa",
+    "scientific_name": "Luffa aegyptiaca",
+    "category": "legume",
+    "gender": "f",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 14,
+    "search_keywords": [
+      "luffa",
+      "éponge végétale"
+    ],
+    "image": "assets/crops/images/legume.png",
+    "image_slug": "luffa"
+  },
+  {
+    "id": 57,
+    "name_fr": "Maïs doux",
+    "scientific_name": "Zea mays",
+    "category": "legume",
+    "gender": "m",
+    "water_need": "high",
+    "base_interval_days": 2,
+    "seedling_factor": 0.5,
+    "seedling_days": 14,
+    "search_keywords": [
+      "maïs",
+      "mais",
+      "corn",
+      "sweet corn"
+    ],
+    "image": "assets/crops/images/legume.png",
+    "image_slug": "mais_doux"
+  },
+  {
+    "id": 58,
+    "name_fr": "Fenouil",
+    "scientific_name": "Foeniculum vulgare",
+    "category": "legume",
+    "gender": "m",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 21,
+    "search_keywords": [
+      "fenouil",
+      "fennel"
+    ],
+    "image": "assets/crops/images/legume.png",
+    "image_slug": "fenouil"
+  },
+  {
+    "id": 59,
+    "name_fr": "Céleri branche",
+    "scientific_name": "Apium graveolens",
+    "category": "legume",
+    "gender": "m",
+    "water_need": "high",
+    "base_interval_days": 2,
+    "seedling_factor": 0.5,
+    "seedling_days": 21,
+    "search_keywords": [
+      "céleri",
+      "celeri",
+      "celery"
+    ],
+    "image": "assets/crops/images/legume.png",
+    "image_slug": "celeri_branche"
+  },
+  {
+    "id": 60,
+    "name_fr": "Céleri-rave",
+    "scientific_name": "Apium graveolens",
+    "category": "legume",
+    "gender": "m",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 21,
+    "search_keywords": [
+      "céleri-rave",
+      "celeriac"
+    ],
+    "image": "assets/crops/images/legume.png",
+    "image_slug": "celeri_rave"
+  },
+  {
+    "id": 61,
+    "name_fr": "Artichaut",
+    "scientific_name": "Cynara cardunculus",
+    "category": "legume",
+    "gender": "m",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 28,
+    "search_keywords": [
+      "artichaut",
+      "artichoke"
+    ],
+    "image": "assets/crops/images/legume.png",
+    "image_slug": "artichaut"
+  },
+  {
+    "id": 62,
+    "name_fr": "Cardon",
+    "scientific_name": "Cynara cardunculus",
+    "category": "legume",
+    "gender": "m",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 28,
+    "search_keywords": [
+      "cardon",
+      "cardoon"
+    ],
+    "image": "assets/crops/images/legume.png",
+    "image_slug": "cardon"
+  },
+  {
+    "id": 63,
+    "name_fr": "Asperge",
+    "scientific_name": "Asparagus officinalis",
+    "category": "legume",
+    "gender": "f",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 28,
+    "search_keywords": [
+      "asperge",
+      "asparagus"
+    ],
+    "image": "assets/crops/images/legume.png",
+    "image_slug": "asperge"
+  },
+  {
+    "id": 64,
+    "name_fr": "Mesclun",
+    "scientific_name": "Lactuca sativa",
+    "category": "legume",
+    "gender": "m",
+    "water_need": "high",
+    "base_interval_days": 2,
+    "seedling_factor": 0.5,
+    "seedling_days": 10,
+    "search_keywords": [
+      "mesclun",
+      "salade mixte",
+      "baby greens"
+    ],
+    "image": "assets/crops/images/legume.png",
+    "image_slug": "mesclun"
+  },
+  {
+    "id": 65,
+    "name_fr": "Oseille",
+    "scientific_name": "Rumex acetosa",
+    "category": "legume",
+    "gender": "f",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 14,
+    "search_keywords": [
+      "oseille",
+      "sorrel"
+    ],
+    "image": "assets/crops/images/legume.png",
+    "image_slug": "oseille"
+  },
+  {
+    "id": 66,
+    "name_fr": "Oseille rouge",
+    "scientific_name": "Rumex sanguineus",
+    "category": "legume",
+    "gender": "f",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 14,
+    "search_keywords": [
+      "oseille rouge",
+      "red veined sorrel"
+    ],
+    "image": "assets/crops/images/legume.png",
+    "image_slug": "oseille_rouge"
+  },
+  {
+    "id": 67,
+    "name_fr": "Chicorée",
+    "scientific_name": "Cichorium intybus",
+    "category": "legume",
+    "gender": "f",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 14,
+    "search_keywords": [
+      "chicorée",
+      "chicory",
+      "pain de sucre",
+      "radicchio"
+    ],
+    "image": "assets/crops/images/legume.png",
+    "image_slug": "chicoree"
+  },
+  {
+    "id": 68,
+    "name_fr": "Endive",
+    "scientific_name": "Cichorium intybus",
+    "category": "legume",
+    "gender": "f",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 14,
+    "search_keywords": [
+      "endive",
+      "chicon",
+      "witloof"
+    ],
+    "image": "assets/crops/images/legume.png",
+    "image_slug": "endive"
+  },
+  {
+    "id": 69,
+    "name_fr": "Scarole",
+    "scientific_name": "Cichorium endivia",
+    "category": "legume",
+    "gender": "f",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 14,
+    "search_keywords": [
+      "scarole",
+      "frisée",
+      "endive scarole"
+    ],
+    "image": "assets/crops/images/legume.png",
+    "image_slug": "scarole"
+  },
+  {
+    "id": 70,
+    "name_fr": "Claytone",
+    "scientific_name": "Claytonia perfoliata",
+    "category": "legume",
+    "gender": "f",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 10,
+    "search_keywords": [
+      "claytone",
+      "pourpier d'hiver",
+      "miner's lettuce"
+    ],
+    "image": "assets/crops/images/legume.png",
+    "image_slug": "claytone"
+  },
+  {
+    "id": 71,
+    "name_fr": "Cresson",
+    "scientific_name": "Nasturtium officinale",
+    "category": "legume",
+    "gender": "m",
+    "water_need": "high",
+    "base_interval_days": 2,
+    "seedling_factor": 0.5,
+    "seedling_days": 10,
+    "search_keywords": [
+      "cresson",
+      "watercress"
+    ],
+    "image": "assets/crops/images/legume.png",
+    "image_slug": "cresson"
+  },
+  {
+    "id": 72,
+    "name_fr": "Cresson de terre",
+    "scientific_name": "Barbarea verna",
+    "category": "legume",
+    "gender": "m",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 10,
+    "search_keywords": [
+      "cresson de terre",
+      "upland cress",
+      "barbarea"
+    ],
+    "image": "assets/crops/images/legume.png",
+    "image_slug": "cresson_de_terre"
+  },
+  {
+    "id": 73,
+    "name_fr": "Arroche",
+    "scientific_name": "Atriplex hortensis",
+    "category": "legume",
+    "gender": "f",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 14,
+    "search_keywords": [
+      "arroche",
+      "orach",
+      "belle-dame"
+    ],
+    "image": "assets/crops/images/legume.png",
+    "image_slug": "arroche"
+  },
+  {
+    "id": 74,
+    "name_fr": "Baselle",
+    "scientific_name": "Basella rubra",
+    "category": "legume",
+    "gender": "f",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 14,
+    "search_keywords": [
+      "baselle",
+      "épinard de malabar",
+      "malabar spinach"
+    ],
+    "image": "assets/crops/images/legume.png",
+    "image_slug": "baselle"
+  },
+  {
+    "id": 75,
+    "name_fr": "Amarante",
+    "scientific_name": "Amaranthus tricolor",
+    "category": "legume",
+    "gender": "m",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 14,
+    "search_keywords": [
+      "amarante",
+      "amaranth",
+      "callaloo"
+    ],
+    "image": "assets/crops/images/legume.png",
+    "image_slug": "amarante"
+  },
+  {
+    "id": 76,
+    "name_fr": "Chrysanthème comestible",
+    "scientific_name": "Glebionis coronaria",
+    "category": "legume",
+    "gender": "m",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 14,
+    "search_keywords": [
+      "shungiku",
+      "chrysanthème comestible",
+      "tonghao"
+    ],
+    "image": "assets/crops/images/legume.png",
+    "image_slug": "chrysantheme_comestible"
+  },
+  {
+    "id": 77,
+    "name_fr": "Pissenlit",
+    "scientific_name": "Taraxacum officinale",
+    "category": "legume",
+    "gender": "m",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 14,
+    "search_keywords": [
+      "pissenlit",
+      "dandelion"
+    ],
+    "image": "assets/crops/images/legume.png",
+    "image_slug": "pissenlit"
+  },
+  {
+    "id": 78,
+    "name_fr": "Poireau",
+    "scientific_name": "Allium porrum",
+    "category": "legume",
+    "gender": "m",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 28,
+    "search_keywords": [
+      "poireau",
+      "leek"
+    ],
+    "image": "assets/crops/images/legume.png",
+    "image_slug": "poireau"
+  },
+  {
+    "id": 79,
+    "name_fr": "Poireau perpétuel",
+    "scientific_name": "Allium ampeloprasum",
+    "category": "legume",
+    "gender": "m",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 28,
+    "search_keywords": [
+      "poireau perpétuel",
+      "elephant garlic",
+      "ail d'éléphant"
+    ],
+    "image": "assets/crops/images/legume.png",
+    "image_slug": "poireau_perpetuel"
+  },
+  {
+    "id": 80,
+    "name_fr": "Oignon",
+    "scientific_name": "Allium cepa",
+    "category": "legume",
+    "gender": "m",
+    "water_need": "low",
+    "base_interval_days": 5,
+    "seedling_factor": 0.5,
+    "seedling_days": 21,
+    "search_keywords": [
+      "oignon",
+      "onion"
+    ],
+    "image": "assets/crops/images/legume.png",
+    "image_slug": "oignon"
+  },
+  {
+    "id": 81,
+    "name_fr": "Échalote",
+    "scientific_name": "Allium cepa",
+    "category": "legume",
+    "gender": "f",
+    "water_need": "low",
+    "base_interval_days": 5,
+    "seedling_factor": 0.5,
+    "seedling_days": 21,
+    "search_keywords": [
+      "échalote",
+      "echalote",
+      "shallot"
+    ],
+    "image": "assets/crops/images/legume.png",
+    "image_slug": "echalote"
+  },
+  {
+    "id": 82,
+    "name_fr": "Ail",
+    "scientific_name": "Allium sativum",
+    "category": "legume",
+    "gender": "m",
+    "water_need": "low",
+    "base_interval_days": 5,
+    "seedling_factor": 0.5,
+    "seedling_days": 28,
+    "search_keywords": [
+      "ail",
+      "garlic"
+    ],
+    "image": "assets/crops/images/legume.png",
+    "image_slug": "ail"
+  },
+  {
+    "id": 83,
+    "name_fr": "Ciboule",
+    "scientific_name": "Allium fistulosum",
+    "category": "legume",
+    "gender": "f",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 14,
+    "search_keywords": [
+      "ciboule",
+      "oignon nouveau",
+      "scallion",
+      "spring onion"
+    ],
+    "image": "assets/crops/images/legume.png",
+    "image_slug": "ciboule"
+  },
+  {
+    "id": 84,
+    "name_fr": "Fraisier",
+    "scientific_name": "Fragaria x ananassa",
+    "category": "fruit",
+    "gender": "m",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 21,
+    "search_keywords": [
+      "fraise",
+      "fraisier",
+      "strawberry"
+    ],
+    "image": "assets/crops/images/fruit.png",
+    "image_slug": "fraisier"
+  },
+  {
+    "id": 85,
+    "name_fr": "Fraisier des bois",
+    "scientific_name": "Fragaria vesca",
+    "category": "fruit",
+    "gender": "m",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 21,
+    "search_keywords": [
+      "fraise des bois",
+      "fraisier des bois",
+      "alpine strawberry"
+    ],
+    "image": "assets/crops/images/fruit.png",
+    "image_slug": "fraisier_des_bois"
+  },
+  {
+    "id": 86,
+    "name_fr": "Framboisier",
+    "scientific_name": "Rubus idaeus",
+    "category": "fruit",
+    "gender": "m",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 28,
+    "search_keywords": [
+      "framboise",
+      "framboisier",
+      "raspberry"
+    ],
+    "image": "assets/crops/images/fruit.png",
+    "image_slug": "framboisier"
+  },
+  {
+    "id": 87,
+    "name_fr": "Mûrier",
+    "scientific_name": "Rubus fruticosus",
+    "category": "fruit",
+    "gender": "m",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 28,
+    "search_keywords": [
+      "mûre",
+      "mûrier",
+      "blackberry",
+      "ronce"
+    ],
+    "image": "assets/crops/images/fruit.png",
+    "image_slug": "murier"
+  },
+  {
+    "id": 88,
+    "name_fr": "Framboisier noir",
+    "scientific_name": "Rubus occidentalis",
+    "category": "fruit",
+    "gender": "m",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 28,
+    "search_keywords": [
+      "framboisier noir",
+      "black raspberry"
+    ],
+    "image": "assets/crops/images/fruit.png",
+    "image_slug": "framboisier_noir"
+  },
+  {
+    "id": 89,
+    "name_fr": "Cassissier",
+    "scientific_name": "Ribes nigrum",
+    "category": "fruit",
+    "gender": "m",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 28,
+    "search_keywords": [
+      "cassis",
+      "cassissier",
+      "blackcurrant"
+    ],
+    "image": "assets/crops/images/fruit.png",
+    "image_slug": "cassissier"
+  },
+  {
+    "id": 90,
+    "name_fr": "Groseillier",
+    "scientific_name": "Ribes rubrum",
+    "category": "fruit",
+    "gender": "m",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 28,
+    "search_keywords": [
+      "groseille",
+      "groseillier",
+      "redcurrant"
+    ],
+    "image": "assets/crops/images/fruit.png",
+    "image_slug": "groseillier"
+  },
+  {
+    "id": 91,
+    "name_fr": "Myrtillier",
+    "scientific_name": "Vaccinium corymbosum",
+    "category": "fruit",
+    "gender": "m",
+    "water_need": "high",
+    "base_interval_days": 2,
+    "seedling_factor": 0.5,
+    "seedling_days": 28,
+    "search_keywords": [
+      "myrtille",
+      "myrtillier",
+      "blueberry"
+    ],
+    "image": "assets/crops/images/fruit.png",
+    "image_slug": "myrtillier"
+  },
+  {
+    "id": 92,
+    "name_fr": "Myrtillier rabbiteye",
+    "scientific_name": "Vaccinium virgatum",
+    "category": "fruit",
+    "gender": "m",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 28,
+    "search_keywords": [
+      "rabbiteye",
+      "myrtillier",
+      "blueberry"
+    ],
+    "image": "assets/crops/images/fruit.png",
+    "image_slug": "myrtillier_rabbiteye"
+  },
+  {
+    "id": 93,
+    "name_fr": "Airelle",
+    "scientific_name": "Vaccinium vitis-idaea",
+    "category": "fruit",
+    "gender": "f",
+    "water_need": "high",
+    "base_interval_days": 2,
+    "seedling_factor": 0.5,
+    "seedling_days": 28,
+    "search_keywords": [
+      "airelle",
+      "lingonberry",
+      "canneberge rouge"
+    ],
+    "image": "assets/crops/images/fruit.png",
+    "image_slug": "airelle"
+  },
+  {
+    "id": 94,
+    "name_fr": "Amélanchier",
+    "scientific_name": "Amelanchier alnifolia",
+    "category": "fruit",
+    "gender": "m",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 28,
+    "search_keywords": [
+      "amélanchier",
+      "saskatoon",
+      "serviceberry"
+    ],
+    "image": "assets/crops/images/fruit.png",
+    "image_slug": "amelanchier"
+  },
+  {
+    "id": 95,
+    "name_fr": "Aronia",
+    "scientific_name": "Aronia melanocarpa",
+    "category": "fruit",
+    "gender": "f",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 28,
+    "search_keywords": [
+      "aronia",
+      "chokeberry"
+    ],
+    "image": "assets/crops/images/fruit.png",
+    "image_slug": "aronia"
+  },
+  {
+    "id": 96,
+    "name_fr": "Argousier",
+    "scientific_name": "Hippophae rhamnoides",
+    "category": "fruit",
+    "gender": "m",
+    "water_need": "low",
+    "base_interval_days": 5,
+    "seedling_factor": 0.5,
+    "seedling_days": 28,
+    "search_keywords": [
+      "argousier",
+      "sea buckthorn"
+    ],
+    "image": "assets/crops/images/fruit.png",
+    "image_slug": "argousier"
+  },
+  {
+    "id": 97,
+    "name_fr": "Goji",
+    "scientific_name": "Lycium barbarum",
+    "category": "fruit",
+    "gender": "m",
+    "water_need": "low",
+    "base_interval_days": 5,
+    "seedling_factor": 0.5,
+    "seedling_days": 28,
+    "search_keywords": [
+      "goji",
+      "lyciet",
+      "wolfberry"
+    ],
+    "image": "assets/crops/images/fruit.png",
+    "image_slug": "goji"
+  },
+  {
+    "id": 98,
+    "name_fr": "Camérisier",
+    "scientific_name": "Lonicera caerulea",
+    "category": "fruit",
+    "gender": "m",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 28,
+    "search_keywords": [
+      "camérisier",
+      "honeyberry",
+      "haskap"
+    ],
+    "image": "assets/crops/images/fruit.png",
+    "image_slug": "camerisier"
+  },
+  {
+    "id": 99,
+    "name_fr": "Rhubarbe",
+    "scientific_name": "Rheum rhabarbarum",
+    "category": "fruit",
+    "gender": "f",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 28,
+    "search_keywords": [
+      "rhubarbe",
+      "rhubarb"
+    ],
+    "image": "assets/crops/images/fruit.png",
+    "image_slug": "rhubarbe"
+  },
+  {
+    "id": 100,
+    "name_fr": "Melon",
+    "scientific_name": "Cucumis melo",
+    "category": "fruit",
+    "gender": "m",
+    "water_need": "high",
+    "base_interval_days": 2,
+    "seedling_factor": 0.5,
+    "seedling_days": 14,
+    "search_keywords": [
+      "melon",
+      "charentais",
+      "cantaloupe"
+    ],
+    "image": "assets/crops/images/fruit.png",
+    "image_slug": "melon"
+  },
+  {
+    "id": 101,
+    "name_fr": "Pastèque",
+    "scientific_name": "Citrullus lanatus",
+    "category": "fruit",
+    "gender": "f",
+    "water_need": "high",
+    "base_interval_days": 2,
+    "seedling_factor": 0.5,
+    "seedling_days": 14,
+    "search_keywords": [
+      "pastèque",
+      "pasteque",
+      "watermelon"
+    ],
+    "image": "assets/crops/images/fruit.png",
+    "image_slug": "pasteque"
+  },
+  {
+    "id": 102,
+    "name_fr": "Pommier",
+    "scientific_name": "Malus domestica",
+    "category": "fruit",
+    "gender": "m",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 28,
+    "search_keywords": [
+      "pomme",
+      "pommier",
+      "apple"
+    ],
+    "image": "assets/crops/images/fruit.png",
+    "image_slug": "pommier"
+  },
+  {
+    "id": 103,
+    "name_fr": "Poirier",
+    "scientific_name": "Pyrus communis",
+    "category": "fruit",
+    "gender": "m",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 28,
+    "search_keywords": [
+      "poire",
+      "poirier",
+      "pear"
+    ],
+    "image": "assets/crops/images/fruit.png",
+    "image_slug": "poirier"
+  },
+  {
+    "id": 104,
+    "name_fr": "Pêcher",
+    "scientific_name": "Prunus persica",
+    "category": "fruit",
+    "gender": "m",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 28,
+    "search_keywords": [
+      "pêche",
+      "pêcher",
+      "peach"
+    ],
+    "image": "assets/crops/images/fruit.png",
+    "image_slug": "pecher"
+  },
+  {
+    "id": 105,
+    "name_fr": "Cerisier",
+    "scientific_name": "Prunus avium",
+    "category": "fruit",
+    "gender": "m",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 28,
+    "search_keywords": [
+      "cerise",
+      "cerisier",
+      "cherry"
+    ],
+    "image": "assets/crops/images/fruit.png",
+    "image_slug": "cerisier"
+  },
+  {
+    "id": 106,
+    "name_fr": "Cerisier aigre",
+    "scientific_name": "Prunus cerasus",
+    "category": "fruit",
+    "gender": "m",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 28,
+    "search_keywords": [
+      "cerise aigre",
+      "griottier",
+      "sour cherry"
+    ],
+    "image": "assets/crops/images/fruit.png",
+    "image_slug": "cerisier_aigre"
+  },
+  {
+    "id": 107,
+    "name_fr": "Prunier",
+    "scientific_name": "Prunus domestica",
+    "category": "fruit",
+    "gender": "m",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 28,
+    "search_keywords": [
+      "prune",
+      "prunier",
+      "plum"
+    ],
+    "image": "assets/crops/images/fruit.png",
+    "image_slug": "prunier"
+  },
+  {
+    "id": 108,
+    "name_fr": "Prunier japonais",
+    "scientific_name": "Prunus salicina",
+    "category": "fruit",
+    "gender": "m",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 28,
+    "search_keywords": [
+      "prune japonaise",
+      "prunier japonais",
+      "japanese plum"
+    ],
+    "image": "assets/crops/images/fruit.png",
+    "image_slug": "prunier_japonais"
+  },
+  {
+    "id": 109,
+    "name_fr": "Figuier",
+    "scientific_name": "Ficus carica",
+    "category": "fruit",
+    "gender": "m",
+    "water_need": "low",
+    "base_interval_days": 5,
+    "seedling_factor": 0.5,
+    "seedling_days": 28,
+    "search_keywords": [
+      "figue",
+      "figuier",
+      "fig"
+    ],
+    "image": "assets/crops/images/fruit.png",
+    "image_slug": "figuier"
+  },
+  {
+    "id": 110,
+    "name_fr": "Grenadier",
+    "scientific_name": "Punica granatum",
+    "category": "fruit",
+    "gender": "m",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 28,
+    "search_keywords": [
+      "grenade",
+      "grenadier",
+      "pomegranate"
+    ],
+    "image": "assets/crops/images/fruit.png",
+    "image_slug": "grenadier"
+  },
+  {
+    "id": 111,
+    "name_fr": "Basilic",
+    "scientific_name": "Ocimum basilicum",
+    "category": "aromate",
+    "gender": "m",
+    "water_need": "high",
+    "base_interval_days": 2,
+    "seedling_factor": 0.5,
+    "seedling_days": 14,
+    "search_keywords": [
+      "basilic",
+      "basil"
+    ],
+    "image": "assets/crops/images/aromate.png",
+    "image_slug": "basilic"
+  },
+  {
+    "id": 112,
+    "name_fr": "Basilic sacré",
+    "scientific_name": "Ocimum tenuiflorum",
+    "category": "aromate",
+    "gender": "m",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 14,
+    "search_keywords": [
+      "basilic sacré",
+      "tulsi",
+      "holy basil"
+    ],
+    "image": "assets/crops/images/aromate.png",
+    "image_slug": "basilic_sacre"
+  },
+  {
+    "id": 113,
+    "name_fr": "Basilic africain",
+    "scientific_name": "Ocimum africanum",
+    "category": "aromate",
+    "gender": "m",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 14,
+    "search_keywords": [
+      "basilic africain",
+      "kapoor tulsi",
+      "ocimum africanum"
+    ],
+    "image": "assets/crops/images/aromate.png",
+    "image_slug": "basilic_africain"
+  },
+  {
+    "id": 114,
+    "name_fr": "Basilic citron",
+    "scientific_name": "Ocimum x citriodorum",
+    "category": "aromate",
+    "gender": "m",
+    "water_need": "high",
+    "base_interval_days": 2,
+    "seedling_factor": 0.5,
+    "seedling_days": 14,
+    "search_keywords": [
+      "basilic citron",
+      "lime basil",
+      "lemon basil"
+    ],
+    "image": "assets/crops/images/aromate.png",
+    "image_slug": "basilic_citron"
+  },
+  {
+    "id": 115,
+    "name_fr": "Persil",
+    "scientific_name": "Petroselinum crispum",
+    "category": "aromate",
+    "gender": "m",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 21,
+    "search_keywords": [
+      "persil",
+      "parsley"
+    ],
+    "image": "assets/crops/images/aromate.png",
+    "image_slug": "persil"
+  },
+  {
+    "id": 116,
+    "name_fr": "Coriandre",
+    "scientific_name": "Coriandrum sativum",
+    "category": "aromate",
+    "gender": "f",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 14,
+    "search_keywords": [
+      "coriandre",
+      "cilantro",
+      "coriander"
+    ],
+    "image": "assets/crops/images/aromate.png",
+    "image_slug": "coriandre"
+  },
+  {
+    "id": 117,
+    "name_fr": "Ciboulette",
+    "scientific_name": "Allium schoenoprasum",
+    "category": "aromate",
+    "gender": "f",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 14,
+    "search_keywords": [
+      "ciboulette",
+      "chives"
+    ],
+    "image": "assets/crops/images/aromate.png",
+    "image_slug": "ciboulette"
+  },
+  {
+    "id": 118,
+    "name_fr": "Ciboulette chinoise",
+    "scientific_name": "Allium tuberosum",
+    "category": "aromate",
+    "gender": "f",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 14,
+    "search_keywords": [
+      "ciboulette chinoise",
+      "garlic chives",
+      "ail chinois"
+    ],
+    "image": "assets/crops/images/aromate.png",
+    "image_slug": "ciboulette_chinoise"
+  },
+  {
+    "id": 119,
+    "name_fr": "Menthe",
+    "scientific_name": "Mentha spicata",
+    "category": "aromate",
+    "gender": "f",
+    "water_need": "high",
+    "base_interval_days": 2,
+    "seedling_factor": 0.5,
+    "seedling_days": 14,
+    "search_keywords": [
+      "menthe",
+      "mint",
+      "spearmint"
+    ],
+    "image": "assets/crops/images/aromate.png",
+    "image_slug": "menthe"
+  },
+  {
+    "id": 120,
+    "name_fr": "Thym",
+    "scientific_name": "Thymus vulgaris",
+    "category": "aromate",
+    "gender": "m",
+    "water_need": "low",
+    "base_interval_days": 5,
+    "seedling_factor": 0.5,
+    "seedling_days": 21,
+    "search_keywords": [
+      "thym",
+      "thyme"
+    ],
+    "image": "assets/crops/images/aromate.png",
+    "image_slug": "thym"
+  },
+  {
+    "id": 121,
+    "name_fr": "Thym serpolet",
+    "scientific_name": "Thymus serpyllum",
+    "category": "aromate",
+    "gender": "m",
+    "water_need": "low",
+    "base_interval_days": 5,
+    "seedling_factor": 0.5,
+    "seedling_days": 21,
+    "search_keywords": [
+      "serpolet",
+      "creeping thyme"
+    ],
+    "image": "assets/crops/images/aromate.png",
+    "image_slug": "thym_serpolet"
+  },
+  {
+    "id": 122,
+    "name_fr": "Thym orange",
+    "scientific_name": "Thymus fragrantissimus",
+    "category": "aromate",
+    "gender": "m",
+    "water_need": "low",
+    "base_interval_days": 5,
+    "seedling_factor": 0.5,
+    "seedling_days": 21,
+    "search_keywords": [
+      "thym orange",
+      "orange thyme"
+    ],
+    "image": "assets/crops/images/aromate.png",
+    "image_slug": "thym_orange"
+  },
+  {
+    "id": 123,
+    "name_fr": "Romarin",
+    "scientific_name": "Salvia rosmarinus",
+    "category": "aromate",
+    "gender": "m",
+    "water_need": "low",
+    "base_interval_days": 5,
+    "seedling_factor": 0.5,
+    "seedling_days": 28,
+    "search_keywords": [
+      "romarin",
+      "rosemary",
+      "rosmarinus",
+      "rosmarinus officinalis"
+    ],
+    "image": "assets/crops/images/aromate.png",
+    "image_slug": "romarin"
+  },
+  {
+    "id": 124,
+    "name_fr": "Origan",
+    "scientific_name": "Origanum vulgare",
+    "category": "aromate",
+    "gender": "m",
+    "water_need": "low",
+    "base_interval_days": 5,
+    "seedling_factor": 0.5,
+    "seedling_days": 21,
+    "search_keywords": [
+      "origan",
+      "orégano",
+      "oregano"
+    ],
+    "image": "assets/crops/images/aromate.png",
+    "image_slug": "origan"
+  },
+  {
+    "id": 125,
+    "name_fr": "Marjolaine",
+    "scientific_name": "Origanum majorana",
+    "category": "aromate",
+    "gender": "f",
+    "water_need": "low",
+    "base_interval_days": 5,
+    "seedling_factor": 0.5,
+    "seedling_days": 21,
+    "search_keywords": [
+      "marjolaine",
+      "marjoram"
+    ],
+    "image": "assets/crops/images/aromate.png",
+    "image_slug": "marjolaine"
+  },
+  {
+    "id": 126,
+    "name_fr": "Zaatar",
+    "scientific_name": "Origanum syriacum",
+    "category": "aromate",
+    "gender": "m",
+    "water_need": "low",
+    "base_interval_days": 5,
+    "seedling_factor": 0.5,
+    "seedling_days": 21,
+    "search_keywords": [
+      "zaatar",
+      "za'atar",
+      "origan de syrie"
+    ],
+    "image": "assets/crops/images/aromate.png",
+    "image_slug": "zaatar"
+  },
+  {
+    "id": 127,
+    "name_fr": "Sauge",
+    "scientific_name": "Salvia officinalis",
+    "category": "aromate",
+    "gender": "f",
+    "water_need": "low",
+    "base_interval_days": 5,
+    "seedling_factor": 0.5,
+    "seedling_days": 21,
+    "search_keywords": [
+      "sauge",
+      "sage"
+    ],
+    "image": "assets/crops/images/aromate.png",
+    "image_slug": "sauge"
+  },
+  {
+    "id": 128,
+    "name_fr": "Sauge ananas",
+    "scientific_name": "Salvia elegans",
+    "category": "aromate",
+    "gender": "f",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 21,
+    "search_keywords": [
+      "sauge ananas",
+      "pineapple sage"
+    ],
+    "image": "assets/crops/images/aromate.png",
+    "image_slug": "sauge_ananas"
+  },
+  {
+    "id": 129,
+    "name_fr": "Estragon",
+    "scientific_name": "Artemisia dracunculus",
+    "category": "aromate",
+    "gender": "m",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 21,
+    "search_keywords": [
+      "estragon",
+      "tarragon"
+    ],
+    "image": "assets/crops/images/aromate.png",
+    "image_slug": "estragon"
+  },
+  {
+    "id": 130,
+    "name_fr": "Estragon russe",
+    "scientific_name": "Artemisia dracunculoides",
+    "category": "aromate",
+    "gender": "f",
+    "water_need": "low",
+    "base_interval_days": 5,
+    "seedling_factor": 0.5,
+    "seedling_days": 21,
+    "search_keywords": [
+      "estragon russe",
+      "russian tarragon"
+    ],
+    "image": "assets/crops/images/aromate.png",
+    "image_slug": "estragon_russe"
+  },
+  {
+    "id": 131,
+    "name_fr": "Laurier sauce",
+    "scientific_name": "Laurus nobilis",
+    "category": "aromate",
+    "gender": "m",
+    "water_need": "low",
+    "base_interval_days": 5,
+    "seedling_factor": 0.5,
+    "seedling_days": 28,
+    "search_keywords": [
+      "laurier",
+      "bay leaf",
+      "laurus"
+    ],
+    "image": "assets/crops/images/aromate.png",
+    "image_slug": "laurier_sauce"
+  },
+  {
+    "id": 132,
+    "name_fr": "Aneth",
+    "scientific_name": "Anethum graveolens",
+    "category": "aromate",
+    "gender": "m",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 14,
+    "search_keywords": [
+      "aneth",
+      "dill"
+    ],
+    "image": "assets/crops/images/aromate.png",
+    "image_slug": "aneth"
+  },
+  {
+    "id": 133,
+    "name_fr": "Cerfeuil",
+    "scientific_name": "Anthriscus cerefolium",
+    "category": "aromate",
+    "gender": "m",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 14,
+    "search_keywords": [
+      "cerfeuil",
+      "chervil"
+    ],
+    "image": "assets/crops/images/aromate.png",
+    "image_slug": "cerfeuil"
+  },
+  {
+    "id": 134,
+    "name_fr": "Mélisse",
+    "scientific_name": "Melissa officinalis",
+    "category": "aromate",
+    "gender": "f",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 14,
+    "search_keywords": [
+      "mélisse",
+      "lemon balm"
+    ],
+    "image": "assets/crops/images/aromate.png",
+    "image_slug": "melisse"
+  },
+  {
+    "id": 135,
+    "name_fr": "Lavande",
+    "scientific_name": "Lavandula angustifolia",
+    "category": "aromate",
+    "gender": "f",
+    "water_need": "low",
+    "base_interval_days": 5,
+    "seedling_factor": 0.5,
+    "seedling_days": 28,
+    "search_keywords": [
+      "lavande",
+      "lavender"
+    ],
+    "image": "assets/crops/images/aromate.png",
+    "image_slug": "lavande"
+  },
+  {
+    "id": 136,
+    "name_fr": "Lavande dentée",
+    "scientific_name": "Lavandula dentata",
+    "category": "aromate",
+    "gender": "f",
+    "water_need": "low",
+    "base_interval_days": 5,
+    "seedling_factor": 0.5,
+    "seedling_days": 28,
+    "search_keywords": [
+      "lavande dentée",
+      "french lavender"
+    ],
+    "image": "assets/crops/images/aromate.png",
+    "image_slug": "lavande_dentee"
+  },
+  {
+    "id": 137,
+    "name_fr": "Verveine citronnelle",
+    "scientific_name": "Aloysia citriodora",
+    "category": "aromate",
+    "gender": "f",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 21,
+    "search_keywords": [
+      "verveine",
+      "lemon verbena",
+      "citronnelle"
+    ],
+    "image": "assets/crops/images/aromate.png",
+    "image_slug": "verveine_citronnelle"
+  },
+  {
+    "id": 138,
+    "name_fr": "Citronnelle",
+    "scientific_name": "Cymbopogon flexuosus",
+    "category": "aromate",
+    "gender": "m",
+    "water_need": "high",
+    "base_interval_days": 2,
+    "seedling_factor": 0.5,
+    "seedling_days": 21,
+    "search_keywords": [
+      "citronnelle",
+      "lemongrass",
+      "cymbopogon"
+    ],
+    "image": "assets/crops/images/aromate.png",
+    "image_slug": "citronnelle"
+  },
+  {
+    "id": 139,
+    "name_fr": "Camomille",
+    "scientific_name": "Matricaria chamomilla",
+    "category": "aromate",
+    "gender": "f",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 14,
+    "search_keywords": [
+      "camomille",
+      "chamomile",
+      "matricaria",
+      "matricaria recutita"
+    ],
+    "image": "assets/crops/images/aromate.png",
+    "image_slug": "camomille"
+  },
+  {
+    "id": 140,
+    "name_fr": "Camomille romaine",
+    "scientific_name": "Chamaemelum nobile",
+    "category": "aromate",
+    "gender": "f",
+    "water_need": "low",
+    "base_interval_days": 5,
+    "seedling_factor": 0.5,
+    "seedling_days": 21,
+    "search_keywords": [
+      "camomille romaine",
+      "roman chamomile"
+    ],
+    "image": "assets/crops/images/aromate.png",
+    "image_slug": "camomille_romaine"
+  },
+  {
+    "id": 141,
+    "name_fr": "Sarriette",
+    "scientific_name": "Satureja hortensis",
+    "category": "aromate",
+    "gender": "f",
+    "water_need": "low",
+    "base_interval_days": 5,
+    "seedling_factor": 0.5,
+    "seedling_days": 14,
+    "search_keywords": [
+      "sarriette",
+      "summer savory"
+    ],
+    "image": "assets/crops/images/aromate.png",
+    "image_slug": "sarriette"
+  },
+  {
+    "id": 142,
+    "name_fr": "Sarriette vivace",
+    "scientific_name": "Satureja montana",
+    "category": "aromate",
+    "gender": "f",
+    "water_need": "low",
+    "base_interval_days": 5,
+    "seedling_factor": 0.5,
+    "seedling_days": 21,
+    "search_keywords": [
+      "sarriette vivace",
+      "winter savory"
+    ],
+    "image": "assets/crops/images/aromate.png",
+    "image_slug": "sarriette_vivace"
+  },
+  {
+    "id": 143,
+    "name_fr": "Livèche",
+    "scientific_name": "Levisticum officinale",
+    "category": "aromate",
+    "gender": "f",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 21,
+    "search_keywords": [
+      "livèche",
+      "lovage"
+    ],
+    "image": "assets/crops/images/aromate.png",
+    "image_slug": "liveche"
+  },
+  {
+    "id": 144,
+    "name_fr": "Angélique",
+    "scientific_name": "Angelica archangelica",
+    "category": "aromate",
+    "gender": "f",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 28,
+    "search_keywords": [
+      "angélique",
+      "angelica"
+    ],
+    "image": "assets/crops/images/aromate.png",
+    "image_slug": "angelique"
+  },
+  {
+    "id": 145,
+    "name_fr": "Bourrache",
+    "scientific_name": "Borago officinalis",
+    "category": "aromate",
+    "gender": "f",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 14,
+    "search_keywords": [
+      "bourrache",
+      "borage"
+    ],
+    "image": "assets/crops/images/aromate.png",
+    "image_slug": "bourrache"
+  },
+  {
+    "id": 146,
+    "name_fr": "Cumin",
+    "scientific_name": "Cuminum cyminum",
+    "category": "aromate",
+    "gender": "m",
+    "water_need": "low",
+    "base_interval_days": 5,
+    "seedling_factor": 0.5,
+    "seedling_days": 14,
+    "search_keywords": [
+      "cumin",
+      "cuminum"
+    ],
+    "image": "assets/crops/images/aromate.png",
+    "image_slug": "cumin"
+  },
+  {
+    "id": 147,
+    "name_fr": "Carvi",
+    "scientific_name": "Carum carvi",
+    "category": "aromate",
+    "gender": "m",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 21,
+    "search_keywords": [
+      "carvi",
+      "caraway"
+    ],
+    "image": "assets/crops/images/aromate.png",
+    "image_slug": "carvi"
+  },
+  {
+    "id": 148,
+    "name_fr": "Shiso",
+    "scientific_name": "Perilla frutescens",
+    "category": "aromate",
+    "gender": "m",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 14,
+    "search_keywords": [
+      "shiso",
+      "perilla",
+      "basilic japonais"
+    ],
+    "image": "assets/crops/images/aromate.png",
+    "image_slug": "shiso"
+  },
+  {
+    "id": 149,
+    "name_fr": "Hysope",
+    "scientific_name": "Hyssopus officinalis",
+    "category": "aromate",
+    "gender": "f",
+    "water_need": "low",
+    "base_interval_days": 5,
+    "seedling_factor": 0.5,
+    "seedling_days": 21,
+    "search_keywords": [
+      "hysope",
+      "hyssop"
+    ],
+    "image": "assets/crops/images/aromate.png",
+    "image_slug": "hysope"
+  },
+  {
+    "id": 150,
+    "name_fr": "Agastache",
+    "scientific_name": "Agastache foeniculum",
+    "category": "aromate",
+    "gender": "f",
+    "water_need": "low",
+    "base_interval_days": 5,
+    "seedling_factor": 0.5,
+    "seedling_days": 21,
+    "search_keywords": [
+      "agastache",
+      "anise hyssop",
+      "fenouil anisé"
+    ],
+    "image": "assets/crops/images/aromate.png",
+    "image_slug": "agastache"
+  },
+  {
+    "id": 151,
+    "name_fr": "Cataire",
+    "scientific_name": "Nepeta cataria",
+    "category": "aromate",
+    "gender": "f",
+    "water_need": "low",
+    "base_interval_days": 5,
+    "seedling_factor": 0.5,
+    "seedling_days": 21,
+    "search_keywords": [
+      "cataire",
+      "catnip",
+      "herbe à chat"
+    ],
+    "image": "assets/crops/images/aromate.png",
+    "image_slug": "cataire"
+  },
+  {
+    "id": 152,
+    "name_fr": "Stevia",
+    "scientific_name": "Stevia rebaudiana",
+    "category": "aromate",
+    "gender": "f",
+    "water_need": "medium",
+    "base_interval_days": 3,
+    "seedling_factor": 0.5,
+    "seedling_days": 21,
+    "search_keywords": [
+      "stevia",
+      "stévia",
+      "sucre vert"
+    ],
+    "image": "assets/crops/images/aromate.png",
+    "image_slug": "stevia"
+  },
+  {
+    "id": 153,
+    "name_fr": "Origan cubain",
+    "scientific_name": "Plectranthus amboinicus",
+    "category": "aromate",
+    "gender": "m",
+    "water_need": "low",
+    "base_interval_days": 5,
+    "seedling_factor": 0.5,
+    "seedling_days": 21,
+    "search_keywords": [
+      "origan cubain",
+      "cuban oregano",
+      "thym espagnol"
+    ],
+    "image": "assets/crops/images/aromate.png",
+    "image_slug": "origan_cubain"
+  },
+  {
+    "id": 154,
+    "name_fr": "Estragon du Mexique",
+    "scientific_name": "Tagetes lucida",
+    "category": "aromate",
+    "gender": "m",
+    "water_need": "low",
+    "base_interval_days": 5,
+    "seedling_factor": 0.5,
+    "seedling_days": 21,
+    "search_keywords": [
+      "estragon du mexique",
+      "mexican tarragon",
+      "tagetes"
+    ],
+    "image": "assets/crops/images/aromate.png",
+    "image_slug": "estragon_du_mexique"
+  }
+]

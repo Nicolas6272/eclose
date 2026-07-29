@@ -46,3 +46,6 @@ app.*.map.json
 
 # Local secrets (Perenual API key for fetch script)
 .env.local
+
+# Downloaded plant-variety-database cache (rebuild downloads if missing)
+scripts/data/varieties.csv

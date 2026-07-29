@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_theme.dart';
-import '../../../data/models/catalog_plant.dart';
+import '../../../data/models/catalog_crop.dart';
 
-class PlantAvatar extends StatelessWidget {
-  const PlantAvatar({
+class CropAvatar extends StatelessWidget {
+  const CropAvatar({
     super.key,
-    required this.plant,
+    required this.crop,
     this.size = 48,
     this.borderRadius,
   });
 
-  final CatalogPlant plant;
+  final CatalogCrop crop;
   final double size;
   final BorderRadius? borderRadius;
 
@@ -19,20 +19,16 @@ class PlantAvatar extends StatelessWidget {
   Widget build(BuildContext context) {
     final radius = borderRadius ?? BorderRadius.circular(size * 0.22);
 
-    if (plant.imageAsset != null) {
-      return ClipRRect(
-        borderRadius: radius,
-        child: Image.asset(
-          plant.imageAsset!,
-          width: size,
-          height: size,
-          fit: BoxFit.cover,
-          errorBuilder: (_, _, _) => _fallback(radius),
-        ),
-      );
-    }
-
-    return _fallback(radius);
+    return ClipRRect(
+      borderRadius: radius,
+      child: Image.asset(
+        crop.image,
+        width: size,
+        height: size,
+        fit: BoxFit.cover,
+        errorBuilder: (_, _, _) => _fallback(radius),
+      ),
+    );
   }
 
   Widget _fallback(BorderRadius radius) {
@@ -44,7 +40,7 @@ class PlantAvatar extends StatelessWidget {
         borderRadius: radius,
       ),
       child: Icon(
-        plant.isGeneric ? Icons.category_outlined : Icons.eco_outlined,
+        Icons.eco_outlined,
         color: sauge,
         size: size * 0.48,
       ),

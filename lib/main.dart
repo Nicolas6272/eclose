@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
 import 'app.dart';
-import 'data/user_plants_repository.dart';
+import 'data/crop_catalog.dart';
+import 'data/user_crops_repository.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(EcloseApp(repository: UserPlantsRepository()));
+  await CropCatalog.load();
+  runApp(EcloseApp(repository: UserCropsRepository()));
 }
