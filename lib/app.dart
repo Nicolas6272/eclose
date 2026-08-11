@@ -2,14 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'core/theme/app_theme.dart';
+import 'data/notifications/watering_notification_service.dart';
 import 'data/user_crops_repository.dart';
 import 'features/crops/screens/home_screen.dart';
 import 'features/onboarding/onboarding_flow.dart';
 
 class EcloseApp extends StatelessWidget {
-  const EcloseApp({super.key, required this.repository});
+  const EcloseApp({
+    super.key,
+    required this.repository,
+    required this.notifications,
+  });
 
   final UserCropsRepository repository;
+  final WateringNotificationService notifications;
 
   @override
   Widget build(BuildContext context) {
@@ -24,15 +30,22 @@ class EcloseApp extends StatelessWidget {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      home: _AppEntry(repository: repository),
+      home: _AppEntry(
+        repository: repository,
+        notifications: notifications,
+      ),
     );
   }
 }
 
 class _AppEntry extends StatefulWidget {
-  const _AppEntry({required this.repository});
+  const _AppEntry({
+    required this.repository,
+    required this.notifications,
+  });
 
   final UserCropsRepository repository;
+  final WateringNotificationService notifications;
 
   @override
   State<_AppEntry> createState() => _AppEntryState();
@@ -52,6 +65,11 @@ class _AppEntryState extends State<_AppEntry> {
   Future<void> _bootstrap() async {
     try {
       final isComplete = await widget.repository.isOnboardingComplete();
+      if (isComplete) {
+        // Recover schedules after OS kill / reboot.
+        final crops = await widget.repository.getCrops();
+        await widget.notifications.reschedule(crops);
+      }
       if (!mounted) return;
       setState(() {
         _onboardingComplete = isComplete;
@@ -94,9 +112,15 @@ class _AppEntryState extends State<_AppEntry> {
     }
 
     if (_onboardingComplete) {
-      return HomeScreen(repository: widget.repository);
+      return HomeScreen(
+        repository: widget.repository,
+        notifications: widget.notifications,
+      );
     }
 
-    return OnboardingFlow(repository: widget.repository);
+    return OnboardingFlow(
+      repository: widget.repository,
+      notifications: widget.notifications,
+    );
   }
 }

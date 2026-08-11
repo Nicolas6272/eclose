@@ -1,19 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../../../core/theme/app_theme.dart';
-import '../../../core/utils/fr_sort.dart';
 import '../../../data/crop_catalog.dart';
-import '../../../data/models/catalog_crop.dart';
 import '../../../data/models/user_crop.dart';
+import '../../../data/notifications/watering_notification_service.dart';
 import '../../../data/user_crops_repository.dart';
 import '../../onboarding/onboarding_flow.dart';
 import '../../onboarding/screens/crop_picker_screen.dart';
 import '../widgets/crop_card.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key, required this.repository});
+  const HomeScreen({
+    super.key,
+    required this.repository,
+    required this.notifications,
+  });
 
   final UserCropsRepository repository;
+  final WateringNotificationService notifications;
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -21,20 +26,40 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late Future<List<UserCrop>> _cropsFuture;
+  bool _showPermissionBanner = false;
+  bool _permissionBannerDismissed = false;
 
   @override
   void initState() {
     super.initState();
     _loadCrops();
+    _refreshPermissionBanner();
   }
 
   void _loadCrops() {
     _cropsFuture = widget.repository.getCrops();
   }
 
+  Future<void> _syncNotifications() async {
+    final crops = await widget.repository.getCrops();
+    await widget.notifications.reschedule(crops);
+    await _refreshPermissionBanner();
+  }
+
+  Future<void> _refreshPermissionBanner() async {
+    final status = await widget.notifications.permissionStatus();
+    if (!mounted) return;
+    setState(() {
+      _showPermissionBanner =
+          !_permissionBannerDismissed &&
+          status == NotificationPermissionStatus.denied;
+    });
+  }
+
   Future<void> _refresh() async {
     setState(_loadCrops);
     await _cropsFuture;
+    await _syncNotifications();
   }
 
   Future<void> _logPrefs() async {
@@ -51,6 +76,59 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> _waterCrop(UserCrop crop) async {
     await widget.repository.markWatered(crop.id);
     await _refresh();
+  }
+
+  /// Returns true if the crop was deleted.
+  Future<bool> _confirmAndDeleteCrop(UserCrop crop) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Supprimer cette culture ?'),
+        content: Text(
+          '${crop.displayName} sera retirée de ton potager.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Annuler'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Supprimer'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed != true || !mounted) return false;
+    await widget.repository.deleteCrop(crop.id);
+    await _refresh();
+    return true;
+  }
+
+  Widget _swipeToDelete({
+    required String dismissKey,
+    required UserCrop crop,
+    required Widget child,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(12),
+        child: Dismissible(
+          key: ValueKey(dismissKey),
+          direction: DismissDirection.endToStart,
+          confirmDismiss: (_) => _confirmAndDeleteCrop(crop),
+          background: Container(
+            alignment: Alignment.centerRight,
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            color: terracotta,
+            child: const Icon(Icons.delete_outline, color: Colors.white),
+          ),
+          child: child,
+        ),
+      ),
+    );
   }
 
   Future<void> _addCrop() async {
@@ -84,37 +162,74 @@ class _HomeScreenState extends State<HomeScreen> {
     );
 
     if (confirmed != true || !mounted) return;
+    await widget.notifications.cancelAll();
     await widget.repository.resetOnboarding();
     if (!mounted) return;
 
     Navigator.of(context).pushAndRemoveUntil(
       MaterialPageRoute(
-        builder: (_) => OnboardingFlow(repository: widget.repository),
+        builder: (_) => OnboardingFlow(
+          repository: widget.repository,
+          notifications: widget.notifications,
+        ),
       ),
       (_) => false,
     );
   }
 
+  Future<void> _testNotification() async {
+    final crops = await widget.repository.getCrops();
+    final dueCount = await widget.notifications.showTodayReminder(crops);
+    if (!mounted) return;
+
+    if (dueCount < 0) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Permission notifications refusée')),
+      );
+      await _refreshPermissionBanner();
+      return;
+    }
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          dueCount == 0
+              ? 'Notif du jour envoyée (rien à arroser)'
+              : 'Notif du jour envoyée ($dueCount culture${dueCount > 1 ? 's' : ''})',
+        ),
+      ),
+    );
+  }
+
   List<UserCrop> _dueToday(List<UserCrop> crops) {
-    return crops.where((crop) {
+    final due = crops.where((crop) {
       final catalog = CropCatalog.byId(crop.catalogCropId);
       return catalog != null && crop.isDue(catalog);
     }).toList();
+    // Overdue first, then due today.
+    due.sort((a, b) {
+      final catalogA = CropCatalog.byId(a.catalogCropId)!;
+      final catalogB = CropCatalog.byId(b.catalogCropId)!;
+      return a
+          .daysUntilWatering(catalogA)
+          .compareTo(b.daysUntilWatering(catalogB));
+    });
+    return due;
   }
 
-  Map<CropCategory, List<UserCrop>> _groupByCategory(List<UserCrop> crops) {
-    final map = <CropCategory, List<UserCrop>>{
-      for (final c in CropCategory.values) c: <UserCrop>[],
-    };
-    for (final crop in crops) {
+  List<UserCrop> _laterCrops(List<UserCrop> crops) {
+    final later = crops.where((crop) {
       final catalog = CropCatalog.byId(crop.catalogCropId);
-      final category = catalog?.category ?? CropCategory.legume;
-      map[category]!.add(crop);
-    }
-    for (final list in map.values) {
-      list.sort((a, b) => compareFr(a.displayName, b.displayName));
-    }
-    return map;
+      return catalog != null && !crop.isDue(catalog);
+    }).toList();
+    later.sort((a, b) {
+      final catalogA = CropCatalog.byId(a.catalogCropId)!;
+      final catalogB = CropCatalog.byId(b.catalogCropId)!;
+      return a
+          .nextWateringAt(catalogA)
+          .compareTo(b.nextWateringAt(catalogB));
+    });
+    return later;
   }
 
   Widget _pageSectionTitle(String title, {String? subtitle}) {
@@ -143,7 +258,68 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _todayPreview(List<UserCrop> due) {
+  Widget _permissionBanner() {
+    if (!_showPermissionBanner) return const SizedBox.shrink();
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 12, 20, 0),
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: terracotta.withValues(alpha: 0.10),
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: terracotta.withValues(alpha: 0.28)),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Notifications désactivées',
+              style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.w700,
+                  ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              'L\'app marche sans elles — active-les dans Réglages pour le rappel matinal.',
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: vertProfond.withValues(alpha: 0.7),
+                  ),
+            ),
+            const SizedBox(height: 10),
+            Row(
+              children: [
+                TextButton(
+                  onPressed: () async {
+                    await openAppSettings();
+                    await _refreshPermissionBanner();
+                  },
+                  child: const Text('Ouvrir Réglages'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    setState(() {
+                      _permissionBannerDismissed = true;
+                      _showPermissionBanner = false;
+                    });
+                  },
+                  child: Text(
+                    'Plus tard',
+                    style: TextStyle(
+                      color: vertProfond.withValues(alpha: 0.45),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _dueSection(List<UserCrop> due) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -152,8 +328,8 @@ class _HomeScreenState extends State<HomeScreen> {
           subtitle: due.isEmpty
               ? 'Rien à faire pour le moment'
               : due.length == 1
-                  ? '1 plante à arroser'
-                  : '${due.length} plantes à arroser',
+                  ? '1 culture à arroser'
+                  : '${due.length} cultures à arroser',
         ),
         if (due.isEmpty)
           Container(
@@ -182,8 +358,9 @@ class _HomeScreenState extends State<HomeScreen> {
           )
         else
           ...due.map(
-            (crop) => Padding(
-              padding: const EdgeInsets.only(bottom: 10),
+            (crop) => _swipeToDelete(
+              dismissKey: 'due-${crop.id}',
+              crop: crop,
               child: CropCard(
                 crop: crop,
                 onWater: () => _waterCrop(crop),
@@ -194,15 +371,38 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _categoryTitle(String title) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 10, top: 8),
-      child: Text(
-        title,
-        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.w700,
+  Widget _laterSection(List<UserCrop> later) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _pageSectionTitle(
+          'Plus tard',
+          subtitle: later.isEmpty
+              ? 'Tout le reste est à jour'
+              : later.length == 1
+                  ? '1 culture à venir'
+                  : '${later.length} cultures à venir',
+        ),
+        if (later.isEmpty)
+          Text(
+            'Aucune autre culture pour le moment.',
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: vertProfond.withValues(alpha: 0.5),
+                ),
+          )
+        else
+          ...later.map(
+            (crop) => _swipeToDelete(
+              dismissKey: 'later-${crop.id}',
+              crop: crop,
+              child: CropCard(
+                crop: crop,
+                showWaterAlways: true,
+                onWater: () => _waterCrop(crop),
+              ),
             ),
-      ),
+          ),
+      ],
     );
   }
 
@@ -212,7 +412,7 @@ class _HomeScreenState extends State<HomeScreen> {
       child: FilledButton.icon(
         onPressed: _addCrop,
         icon: const Icon(Icons.add),
-        label: const Text('Ajouter une plante'),
+        label: const Text('Ajouter une culture'),
       ),
     );
   }
@@ -221,6 +421,14 @@ class _HomeScreenState extends State<HomeScreen> {
     switch (action) {
       case 'log_prefs':
         await _logPrefs();
+      case 'test_notif':
+        await _testNotification();
+      case 'reschedule_notifs':
+        await _syncNotifications();
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Notifications replanifiées')),
+        );
       case 'reset_onboarding':
         await _resetOnboarding();
       default:
@@ -232,7 +440,13 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Mon potager'),
+        title: Text(
+          'Mon potager',
+          style: Theme.of(context).appBarTheme.titleTextStyle?.copyWith(
+                fontSize: 30,
+                fontWeight: FontWeight.w700,
+              ),
+        ),
         actions: [
           PopupMenuButton<String>(
             tooltip: 'Menu dev',
@@ -245,6 +459,24 @@ class _HomeScreenState extends State<HomeScreen> {
                   contentPadding: EdgeInsets.zero,
                   leading: Icon(Icons.terminal),
                   title: Text('Log prefs'),
+                  dense: true,
+                ),
+              ),
+              PopupMenuItem(
+                value: 'test_notif',
+                child: ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  leading: Icon(Icons.notifications_active_outlined),
+                  title: Text('Notif du jour'),
+                  dense: true,
+                ),
+              ),
+              PopupMenuItem(
+                value: 'reschedule_notifs',
+                child: ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  leading: Icon(Icons.schedule),
+                  title: Text('Replanifier notifs'),
                   dense: true,
                 ),
               ),
@@ -275,12 +507,13 @@ class _HomeScreenState extends State<HomeScreen> {
             if (crops.isEmpty) {
               return Column(
                 children: [
+                  _permissionBanner(),
                   Expanded(
                     child: Center(
                       child: Padding(
                         padding: const EdgeInsets.all(24),
                         child: Text(
-                          'Ton potager est vide.\nAjoute une première plante.',
+                          'Ton potager est vide.\nAjoute une première culture.',
                           style: Theme.of(context).textTheme.bodyLarge,
                           textAlign: TextAlign.center,
                         ),
@@ -293,36 +526,18 @@ class _HomeScreenState extends State<HomeScreen> {
             }
 
             final due = _dueToday(crops);
-            final grouped = _groupByCategory(crops);
+            final later = _laterCrops(crops);
 
             return Column(
               children: [
+                _permissionBanner(),
                 Expanded(
                   child: ListView(
                     padding: const EdgeInsets.fromLTRB(20, 16, 20, 12),
                     children: [
-                      _todayPreview(due),
+                      _dueSection(due),
                       const SizedBox(height: 28),
-                      _pageSectionTitle(
-                        'Toutes mes plantes',
-                        subtitle: 'Classées par catégorie',
-                      ),
-                      for (final category in CropCategory.values)
-                        if (grouped[category]!.isNotEmpty) ...[
-                          _categoryTitle(category.labelFr),
-                          ...grouped[category]!.map(
-                            (crop) => Padding(
-                              padding: const EdgeInsets.only(bottom: 10),
-                              child: CropCard(
-                                crop: crop,
-                                showWaterAlways: false,
-                                onWater: due.contains(crop)
-                                    ? () => _waterCrop(crop)
-                                    : null,
-                              ),
-                            ),
-                          ),
-                        ],
+                      _laterSection(later),
                     ],
                   ),
                 ),

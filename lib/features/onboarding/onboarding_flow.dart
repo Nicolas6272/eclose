@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../data/models/catalog_crop.dart';
+import '../../data/notifications/watering_notification_service.dart';
 import '../../data/user_crops_repository.dart';
 import 'screens/crop_picker_step.dart';
 import 'screens/crop_setup_step.dart';
@@ -9,9 +10,14 @@ import 'screens/welcome_step.dart';
 import 'widgets/onboarding_shell.dart';
 
 class OnboardingFlow extends StatefulWidget {
-  const OnboardingFlow({super.key, required this.repository});
+  const OnboardingFlow({
+    super.key,
+    required this.repository,
+    required this.notifications,
+  });
 
   final UserCropsRepository repository;
+  final WateringNotificationService notifications;
 
   static const totalSteps = 4;
 
@@ -69,6 +75,7 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
           ),
         3 => WateringPromiseStep(
             repository: widget.repository,
+            notifications: widget.notifications,
             crop: _selectedCrop!,
             plantedAt: _plantedAt!,
             lastWateredAt: _lastWateredAt!,

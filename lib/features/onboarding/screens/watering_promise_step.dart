@@ -1,11 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/date_format.dart';
 import '../../../data/models/catalog_crop.dart';
 import '../../../data/models/user_crop.dart';
+import '../../../data/notifications/watering_notification_service.dart';
 import '../../../data/user_crops_repository.dart';
 import '../../crops/screens/home_screen.dart';
 import '../widgets/plant_added_badge.dart';
@@ -14,12 +14,14 @@ class WateringPromiseStep extends StatefulWidget {
   const WateringPromiseStep({
     super.key,
     required this.repository,
+    required this.notifications,
     required this.crop,
     required this.plantedAt,
     required this.lastWateredAt,
   });
 
   final UserCropsRepository repository;
+  final WateringNotificationService notifications;
   final CatalogCrop crop;
   final DateTime plantedAt;
   final DateTime lastWateredAt;
@@ -86,16 +88,21 @@ class _WateringPromiseStepState extends State<WateringPromiseStep>
         !kIsWeb &&
         defaultTargetPlatform != TargetPlatform.macOS) {
       // Soft-ask already accepted: only now fire the one-shot OS prompt.
-      await Permission.notification.request();
+      await widget.notifications.requestPermission();
     }
 
     await widget.repository.completeOnboarding();
+    final crops = await widget.repository.getCrops();
+    await widget.notifications.reschedule(crops);
 
     if (!mounted) return;
 
     Navigator.of(context).pushAndRemoveUntil(
       MaterialPageRoute(
-        builder: (_) => HomeScreen(repository: widget.repository),
+        builder: (_) => HomeScreen(
+          repository: widget.repository,
+          notifications: widget.notifications,
+        ),
       ),
       (_) => false,
     );
@@ -165,7 +172,7 @@ class _WateringPromiseStepState extends State<WateringPromiseStep>
                         ),
                         const SizedBox(height: 12),
                         Text(
-                          'Active les notifications pour recevoir un rappel le jour de l\'arrosage.',
+                          'On te dira quoi arroser demain matin — un seul rappel groupé.',
                           style:
                               Theme.of(context).textTheme.bodyLarge?.copyWith(
                                     fontSize: 16,

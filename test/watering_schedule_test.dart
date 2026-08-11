@@ -51,4 +51,24 @@ void main() {
     );
     expect(days, 4);
   });
+
+  test('young answer sets plantedAt to today', () {
+    final now = DateTime(2026, 8, 11, 15, 30);
+    final planted = plantedAtFromYoungAnswer(
+      isYoungSeedling: true,
+      seedlingDays: 21,
+      now: now,
+    );
+    expect(planted, DateTime(2026, 8, 11));
+  });
+
+  test('established answer backdates plantedAt by seedlingDays', () {
+    final now = DateTime(2026, 8, 11);
+    final planted = plantedAtFromYoungAnswer(
+      isYoungSeedling: false,
+      seedlingDays: 21,
+      now: now,
+    );
+    expect(planted, DateTime(2026, 7, 21));
+  });
 }
