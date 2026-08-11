@@ -3,6 +3,7 @@ import 'dart:developer' as developer;
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:timezone/data/latest_all.dart' as tz_data;
 import 'package:timezone/timezone.dart' as tz;
 
@@ -42,9 +43,8 @@ class WateringNotificationService {
 
   void _log(String message) {
     developer.log(message, name: _logName);
-    if (kDebugMode) {
-      debugPrint('[$_logName] $message');
-    }
+    // Keep visible in release device logs while iterating on notifications.
+    debugPrint('[$_logName] $message');
   }
 
   Future<void> init() async {
@@ -81,7 +81,6 @@ class WateringNotificationService {
       final info = await FlutterTimezone.getLocalTimezone();
       tz.setLocalLocation(tz.getLocation(info.identifier));
     } catch (error) {
-      // Simulator / desktop fallback: keep UTC if lookup fails.
       _log('timezone lookup failed ($error) — falling back to UTC');
       tz.setLocalLocation(tz.UTC);
     }
@@ -104,30 +103,14 @@ class WateringNotificationService {
   Future<NotificationPermissionStatus> permissionStatus() async {
     if (kIsWeb) return NotificationPermissionStatus.unsupported;
 
-    if (defaultTargetPlatform == TargetPlatform.iOS) {
-      final ios = _plugin.resolvePlatformSpecificImplementation<
-          IOSFlutterLocalNotificationsPlugin>();
-      final options = await ios?.checkPermissions();
-      if (options == null) return NotificationPermissionStatus.notDetermined;
-      final granted = (options.isEnabled == true) ||
-          (options.isAlertEnabled == true) ||
-          (options.isBadgeEnabled == true) ||
-          (options.isSoundEnabled == true);
-      if (granted) return NotificationPermissionStatus.granted;
-      // iOS does not expose "not determined" distinctly here after a prompt.
-      return NotificationPermissionStatus.denied;
+    // permission_handler is more reliable than plugin checkPermissions on iOS.
+    final status = await Permission.notification.status;
+    if (status.isGranted || status.isLimited || status.isProvisional) {
+      return NotificationPermissionStatus.granted;
     }
-
-    if (defaultTargetPlatform == TargetPlatform.android) {
-      final android = _plugin.resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin>();
-      final enabled = await android?.areNotificationsEnabled();
-      if (enabled == true) return NotificationPermissionStatus.granted;
-      if (enabled == false) return NotificationPermissionStatus.denied;
-      return NotificationPermissionStatus.notDetermined;
-    }
-
-    return NotificationPermissionStatus.unsupported;
+    if (status.isDenied) return NotificationPermissionStatus.denied;
+    if (status.isPermanentlyDenied) return NotificationPermissionStatus.denied;
+    return NotificationPermissionStatus.notDetermined;
   }
 
   /// Requests OS permission. Returns whether notifications are usable after.
@@ -142,18 +125,22 @@ class WateringNotificationService {
         badge: true,
         sound: true,
       );
-      _log('iOS permission → $result');
-      return result == true;
+      _log('iOS permission request → $result');
+      if (result == true) return true;
+      final status = await permissionStatus();
+      _log('iOS permission fallback status → $status');
+      return status == NotificationPermissionStatus.granted;
     }
 
     if (defaultTargetPlatform == TargetPlatform.android) {
       final android = _plugin.resolvePlatformSpecificImplementation<
           AndroidFlutterLocalNotificationsPlugin>();
       final result = await android?.requestNotificationsPermission();
-      // Best-effort exact alarms for morning precision.
       await android?.requestExactAlarmsPermission();
       _log('Android permission → $result');
-      return result != false;
+      if (result == true) return true;
+      final status = await permissionStatus();
+      return status == NotificationPermissionStatus.granted;
     }
 
     return false;
@@ -227,7 +214,6 @@ class WateringNotificationService {
     for (var offset = 0; offset < horizonDays; offset++) {
       await _plugin.cancel(id: _idBase + offset);
     }
-    await _plugin.cancel(id: _testNotificationId);
   }
 
   List<UserCrop> _dueOnDay(List<UserCrop> crops, DateTime day) {
@@ -256,6 +242,7 @@ class WateringNotificationService {
         presentAlert: true,
         presentBadge: true,
         presentSound: true,
+        interruptionLevel: InterruptionLevel.active,
       ),
       macOS: DarwinNotificationDetails(
         presentAlert: true,
@@ -265,19 +252,33 @@ class WateringNotificationService {
     );
   }
 
-  /// Debug helper: fire a sample reminder in [seconds].
-  Future<void> scheduleTestIn({int seconds = 5}) async {
+  /// Dev helper: fire the grouped "today" reminder now (+ backup in 3s).
+  ///
+  /// Returns how many crops were due today (0 = empty-state copy, -1 = no permission).
+  Future<int> showTodayReminder(List<UserCrop> crops) async {
     if (!_initialized) await init();
-    final when = tz.TZDateTime.now(tz.local).add(Duration(seconds: seconds));
-    await _plugin.zonedSchedule(
+    if (kIsWeb) return 0;
+
+    final allowed = await requestPermission();
+    if (!allowed) {
+      _log('show today — permission denied');
+      return -1;
+    }
+
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final due = _dueOnDay(crops, today);
+    final copy = wateringNotificationCopy(due);
+
+    await _plugin.show(
       id: _testNotificationId,
-      title: 'Arrosage (test)',
-      body: 'Notification de test Éclose',
-      scheduledDate: when,
+      title: copy.title,
+      body: copy.body,
       notificationDetails: _details(),
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-      payload: 'watering_test',
+      payload: 'watering_today',
     );
-    _log('test notification scheduled for $when');
+
+    _log('showed today reminder — ${due.length} crop(s): ${copy.body}');
+    return due.length;
   }
 }

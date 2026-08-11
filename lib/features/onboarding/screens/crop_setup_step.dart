@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_theme.dart';
-import '../../../core/utils/date_format.dart';
 import '../../../data/models/catalog_crop.dart';
 import '../../../data/user_crops_repository.dart';
+import '../../../data/watering_schedule.dart';
 
 class CropSetupResult {
   const CropSetupResult({
@@ -14,6 +14,8 @@ class CropSetupResult {
   final DateTime plantedAt;
   final DateTime lastWateredAt;
 }
+
+enum _YoungPlantAnswer { yes, no, unknown }
 
 class CropSetupStep extends StatefulWidget {
   const CropSetupStep({
@@ -34,9 +36,8 @@ class CropSetupStep extends StatefulWidget {
 }
 
 class _CropSetupStepState extends State<CropSetupStep> {
-  DateTime? _plantedAt;
-  bool _plantedIsMonthApprox = false;
   double _daysSinceWatered = 0;
+  _YoungPlantAnswer? _youngAnswer;
   bool _isSaving = false;
 
   static const int _maxWateredDaysAgo = 30;
@@ -45,12 +46,6 @@ class _CropSetupStepState extends State<CropSetupStep> {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
     return today.subtract(Duration(days: days));
-  }
-
-  static DateTime _midOfMonthOffset(int monthsAgo) {
-    final now = DateTime.now();
-    final target = DateTime(now.year, now.month - monthsAgo, 1);
-    return approximateMidMonth(target.year, target.month);
   }
 
   DateTime get _lastWateredAt => _dateDaysAgo(_daysSinceWatered.round());
@@ -62,181 +57,38 @@ class _CropSetupStepState extends State<CropSetupStep> {
     return 'Il y a $days jours';
   }
 
-  Future<void> _pickPlantedMonth() async {
-    final now = DateTime.now();
-    final months = List.generate(18, (i) {
-      final d = DateTime(now.year, now.month - i, 1);
-      return DateTime(d.year, d.month);
-    });
-
-    final selected = await showModalBottomSheet<DateTime>(
-      context: context,
-      backgroundColor: creme,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (context) {
-        return SafeArea(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(20, 20, 20, 8),
-                child: Text(
-                  'Tu as planté environ en…',
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
-                child: Text(
-                  'Pas besoin du jour exact — on prendra le milieu du mois.',
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: vertProfond.withValues(alpha: 0.55),
-                      ),
-                ),
-              ),
-              Flexible(
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: months.length,
-                  itemBuilder: (context, index) {
-                    final month = months[index];
-                    return ListTile(
-                      title: Text(formatFrenchMonthYear(month)),
-                      onTap: () => Navigator.pop(context, month),
-                    );
-                  },
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-
-    if (selected != null && mounted) {
-      setState(() {
-        _plantedAt = approximateMidMonth(selected.year, selected.month);
-        _plantedIsMonthApprox = true;
-      });
-    }
-  }
-
   Future<void> _submit() async {
-    if (_plantedAt == null || _isSaving) return;
+    if (_youngAnswer == null || _isSaving) return;
 
-    var lastWatered = _lastWateredAt;
-    if (lastWatered.isBefore(_plantedAt!)) {
-      lastWatered = _plantedAt!;
-    }
+    final plantedAt = plantedAtFromYoungAnswer(
+      isYoungSeedling: _youngAnswer == _YoungPlantAnswer.yes,
+      seedlingDays: widget.crop.seedlingDays,
+    );
+    // Keep the user's watering date as-is (even if before plantedAt) so an
+    // overdue plant lands in "À arroser" instead of being silently clamped.
+    final lastWatered = _lastWateredAt;
 
     setState(() => _isSaving = true);
 
     if (widget.isOnboarding) {
       await widget.repository.saveOnboardingCrop(
         widget.crop,
-        plantedAt: _plantedAt!,
+        plantedAt: plantedAt,
         lastWateredAt: lastWatered,
       );
     } else {
       await widget.repository.addCropFromCatalog(
         widget.crop,
-        plantedAt: _plantedAt!,
+        plantedAt: plantedAt,
         lastWateredAt: lastWatered,
       );
     }
 
     if (mounted) {
       widget.onContinue(
-        CropSetupResult(plantedAt: _plantedAt!, lastWateredAt: lastWatered),
+        CropSetupResult(plantedAt: plantedAt, lastWateredAt: lastWatered),
       );
     }
-  }
-
-  Widget _plantedSection() {
-    final today = _dateDaysAgo(0);
-    // Mid-week approximation when the user only remembers "this week".
-    final thisWeek = _dateDaysAgo(3);
-    final thisMonth = _midOfMonthOffset(0);
-
-    final isToday = _plantedAt == today && !_plantedIsMonthApprox;
-    final isThisWeek = _plantedAt == thisWeek && !_plantedIsMonthApprox;
-    final isThisMonth = _plantedIsMonthApprox && _plantedAt == thisMonth;
-    final isOtherMonth = _plantedAt != null &&
-        _plantedIsMonthApprox &&
-        _plantedAt != thisMonth;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Text(
-          'Quand l\'as-tu plantée ?',
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
-        ),
-        const SizedBox(height: 6),
-        Text(
-          'Pas besoin du jour exact.',
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: vertProfond.withValues(alpha: 0.5),
-              ),
-        ),
-        const SizedBox(height: 12),
-        Row(
-          children: [
-            Expanded(
-              child: _DateOption(
-                label: 'Aujourd\'hui',
-                isSelected: isToday,
-                onTap: () => setState(() {
-                  _plantedAt = today;
-                  _plantedIsMonthApprox = false;
-                }),
-              ),
-            ),
-            const SizedBox(width: 8),
-            Expanded(
-              child: _DateOption(
-                label: 'Cette semaine',
-                isSelected: isThisWeek,
-                onTap: () => setState(() {
-                  _plantedAt = thisWeek;
-                  _plantedIsMonthApprox = false;
-                }),
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 8),
-        Row(
-          children: [
-            Expanded(
-              child: _DateOption(
-                label: 'Ce mois-ci',
-                isSelected: isThisMonth,
-                onTap: () => setState(() {
-                  _plantedAt = thisMonth;
-                  _plantedIsMonthApprox = true;
-                }),
-              ),
-            ),
-            const SizedBox(width: 8),
-            Expanded(
-              child: _DateOption(
-                label: isOtherMonth
-                    ? formatFrenchMonthYear(_plantedAt!)
-                    : 'Autre mois…',
-                isSelected: isOtherMonth,
-                onTap: _pickPlantedMonth,
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
   }
 
   Widget _lastWateredSection() {
@@ -251,7 +103,7 @@ class _CropSetupStepState extends State<CropSetupStep> {
         ),
         const SizedBox(height: 6),
         Text(
-          'Fais glisser pour indiquer il y a combien de jours.',
+          'C\'est la base pour savoir quand arroser la prochaine fois.',
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 color: vertProfond.withValues(alpha: 0.5),
               ),
@@ -304,10 +156,49 @@ class _CropSetupStepState extends State<CropSetupStep> {
     );
   }
 
+  Widget _youngPlantSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text(
+          'C\'est un jeune plant ?',
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.w600,
+              ),
+        ),
+        const SizedBox(height: 6),
+        Text(
+          'Moins de ~${widget.crop.seedlingDays} jours : on arrosera un peu plus souvent au début.',
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: vertProfond.withValues(alpha: 0.5),
+              ),
+        ),
+        const SizedBox(height: 12),
+        _ChoiceOption(
+          label: 'Oui',
+          isSelected: _youngAnswer == _YoungPlantAnswer.yes,
+          onTap: () => setState(() => _youngAnswer = _YoungPlantAnswer.yes),
+        ),
+        const SizedBox(height: 8),
+        _ChoiceOption(
+          label: 'Non',
+          isSelected: _youngAnswer == _YoungPlantAnswer.no,
+          onTap: () => setState(() => _youngAnswer = _YoungPlantAnswer.no),
+        ),
+        const SizedBox(height: 8),
+        _ChoiceOption(
+          label: 'Je ne sais pas',
+          isSelected: _youngAnswer == _YoungPlantAnswer.unknown,
+          onTap: () => setState(() => _youngAnswer = _YoungPlantAnswer.unknown),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final cropName = widget.crop.nameFr;
-    final canSubmit = _plantedAt != null && !_isSaving;
+    final canSubmit = _youngAnswer != null && !_isSaving;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -316,7 +207,7 @@ class _CropSetupStepState extends State<CropSetupStep> {
         children: [
           const SizedBox(height: 8),
           Text(
-            'Ta plante : $cropName',
+            'Ta culture : $cropName',
             style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                   fontSize: 24,
                   height: 1.25,
@@ -324,16 +215,16 @@ class _CropSetupStepState extends State<CropSetupStep> {
           ),
           const SizedBox(height: 6),
           Text(
-            'Quelques infos pour calculer le prochain arrosage.',
+            'Deux infos pour calculer le prochain arrosage.',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: vertProfond.withValues(alpha: 0.5),
                   height: 1.4,
                 ),
           ),
           const SizedBox(height: 20),
-          _plantedSection(),
-          const SizedBox(height: 24),
           _lastWateredSection(),
+          const SizedBox(height: 28),
+          _youngPlantSection(),
           const Spacer(),
           FilledButton(
             onPressed: canSubmit ? _submit : null,
@@ -355,8 +246,8 @@ class _CropSetupStepState extends State<CropSetupStep> {
   }
 }
 
-class _DateOption extends StatelessWidget {
-  const _DateOption({
+class _ChoiceOption extends StatelessWidget {
+  const _ChoiceOption({
     required this.label,
     required this.isSelected,
     required this.onTap,
@@ -389,7 +280,6 @@ class _DateOption extends StatelessWidget {
               Expanded(
                 child: Text(
                   label,
-                  textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.titleSmall?.copyWith(
                         fontWeight:
                             isSelected ? FontWeight.w600 : FontWeight.w500,

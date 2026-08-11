@@ -28,11 +28,12 @@ class CropCard extends StatelessWidget {
       subtitle = 'Culture inconnue';
     } else if (due) {
       subtitle = daysLeft < 0
-          ? 'En retard de ${-daysLeft} jour${-daysLeft > 1 ? 's' : ''}'
-          : 'À arroser aujourd\'hui';
+          ? 'Retard ${-daysLeft} j'
+          : 'Aujourd\'hui';
+    } else if (daysLeft == 1) {
+      subtitle = 'Demain';
     } else {
-      subtitle =
-          'Prochain arrosage dans $daysLeft jour${daysLeft > 1 ? 's' : ''}';
+      subtitle = 'Dans $daysLeft j';
     }
 
     return Material(
