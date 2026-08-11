@@ -27,7 +27,7 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSUserNotificationsUsageDescription</key>
-	<string>Éclose a besoin des notifications pour te rappeler d'arroser tes plantes.</string>
+	<string>Éclose a besoin des notifications pour te rappeler quoi arroser dans ton potager.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
