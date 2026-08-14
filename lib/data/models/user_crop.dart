@@ -11,7 +11,8 @@ class UserCrop {
     required this.lastWateredAt,
     this.customName,
     this.intervalOverrideDays,
-  });
+    DateTime? updatedAt,
+  }) : updatedAt = updatedAt ?? lastWateredAt;
 
   final String id;
   final int catalogCropId;
@@ -21,6 +22,7 @@ class UserCrop {
   final DateTime addedAt;
   final DateTime lastWateredAt;
   final int? intervalOverrideDays;
+  final DateTime updatedAt;
 
   String get displayName =>
       (customName != null && customName!.trim().isNotEmpty) ? customName! : name;
@@ -59,9 +61,42 @@ class UserCrop {
         'addedAt': addedAt.toIso8601String(),
         'lastWateredAt': lastWateredAt.toIso8601String(),
         'intervalOverrideDays': intervalOverrideDays,
+        'updatedAt': updatedAt.toIso8601String(),
+      };
+
+  /// Maps a Supabase `user_crops` row to a local [UserCrop].
+  factory UserCrop.fromSupabase(Map<String, dynamic> row) {
+    final lastWatered = DateTime.parse(row['last_watered_at'] as String);
+    final updatedRaw = row['updated_at'] as String?;
+    return UserCrop(
+      id: row['id'] as String,
+      catalogCropId: row['catalog_crop_id'] as int,
+      name: row['name'] as String,
+      customName: row['custom_name'] as String?,
+      plantedAt: DateTime.parse(row['planted_at'] as String),
+      addedAt: DateTime.parse(row['added_at'] as String),
+      lastWateredAt: lastWatered,
+      intervalOverrideDays: row['interval_override_days'] as int?,
+      updatedAt: updatedRaw != null ? DateTime.parse(updatedRaw) : lastWatered,
+    );
+  }
+
+  Map<String, dynamic> toSupabaseRow(String userId) => {
+        'id': id,
+        'user_id': userId,
+        'catalog_crop_id': catalogCropId,
+        'name': name,
+        'custom_name': customName,
+        'planted_at': plantedAt.toUtc().toIso8601String(),
+        'added_at': addedAt.toUtc().toIso8601String(),
+        'last_watered_at': lastWateredAt.toUtc().toIso8601String(),
+        'interval_override_days': intervalOverrideDays,
+        'updated_at': updatedAt.toUtc().toIso8601String(),
       };
 
   factory UserCrop.fromJson(Map<String, dynamic> json) {
+    final lastWatered = DateTime.parse(json['lastWateredAt'] as String);
+    final updatedRaw = json['updatedAt'] as String?;
     return UserCrop(
       id: json['id'] as String,
       catalogCropId: json['catalogCropId'] as int,
@@ -71,8 +106,9 @@ class UserCrop {
         json['plantedAt'] as String? ?? json['addedAt'] as String,
       ),
       addedAt: DateTime.parse(json['addedAt'] as String),
-      lastWateredAt: DateTime.parse(json['lastWateredAt'] as String),
+      lastWateredAt: lastWatered,
       intervalOverrideDays: json['intervalOverrideDays'] as int?,
+      updatedAt: updatedRaw != null ? DateTime.parse(updatedRaw) : lastWatered,
     );
   }
 
@@ -94,6 +130,7 @@ class UserCrop {
       addedAt: now,
       lastWateredAt: lastWateredAt,
       intervalOverrideDays: intervalOverrideDays,
+      updatedAt: now,
     );
   }
 
@@ -102,8 +139,10 @@ class UserCrop {
     DateTime? plantedAt,
     DateTime? lastWateredAt,
     int? intervalOverrideDays,
+    DateTime? updatedAt,
     bool clearIntervalOverride = false,
   }) {
+    final nextLastWatered = lastWateredAt ?? this.lastWateredAt;
     return UserCrop(
       id: id,
       catalogCropId: catalogCropId,
@@ -111,10 +150,11 @@ class UserCrop {
       customName: customName ?? this.customName,
       plantedAt: plantedAt ?? this.plantedAt,
       addedAt: addedAt,
-      lastWateredAt: lastWateredAt ?? this.lastWateredAt,
+      lastWateredAt: nextLastWatered,
       intervalOverrideDays: clearIntervalOverride
           ? null
           : (intervalOverrideDays ?? this.intervalOverrideDays),
+      updatedAt: updatedAt ?? DateTime.now(),
     );
   }
 }

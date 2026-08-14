@@ -12,6 +12,9 @@ import 'models/user_crop.dart';
 class UserCropsRepository {
   static const _cropsKey = 'user_crops';
   static const _onboardingCompleteKey = 'onboarding_complete';
+  /// True once the device has finished onboarding at least once (survives logout
+  /// and "create account" resets so login stays reachable).
+  static const _deviceOnboardedKey = 'device_onboarded';
   static const _logName = 'UserCrops';
 
   void _log(String message) {
@@ -37,6 +40,20 @@ class UserCropsRepository {
     final value = prefs.getBool(_onboardingCompleteKey) ?? false;
     _log('read onboarding_complete → $value');
     return value;
+  }
+
+  /// Device has completed onboarding at least once (login should stay available).
+  Future<bool> hasDeviceOnboarded() async {
+    final prefs = await SharedPreferences.getInstance();
+    final value = prefs.getBool(_deviceOnboardedKey) ?? false;
+    if (value) return true;
+    // Migrate older installs that only had onboarding_complete.
+    final complete = prefs.getBool(_onboardingCompleteKey) ?? false;
+    if (complete) {
+      await prefs.setBool(_deviceOnboardedKey, true);
+      return true;
+    }
+    return false;
   }
 
   Future<List<UserCrop>> getCrops() async {
@@ -134,20 +151,35 @@ class UserCropsRepository {
     await _logAll();
   }
 
-  Future<void> completeOnboarding() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool(_onboardingCompleteKey, true);
-    _log('write onboarding_complete → true');
+  /// Replaces the entire local crop list (used after cloud pull/merge).
+  Future<void> replaceAllCrops(List<UserCrop> crops) async {
+    await _writeCrops(crops);
     await _logAll();
   }
 
-  Future<void> resetOnboarding() async {
+  Future<void> completeOnboarding() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_onboardingCompleteKey, true);
+    await prefs.setBool(_deviceOnboardedKey, true);
+    _log('write onboarding_complete → true, device_onboarded → true');
+    await _logAll();
+  }
+
+  /// Clears local crops and onboarding progress.
+  /// Keeps [hasDeviceOnboarded] so the login screen stays reachable.
+  Future<void> resetOnboarding({bool clearDeviceHistory = false}) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove(_cropsKey);
     await prefs.remove(_onboardingCompleteKey);
     // Clean legacy indoor-plants key if present.
     await prefs.remove('user_plants');
-    _log('reset → cleared onboarding_complete and user_crops');
+    if (clearDeviceHistory) {
+      await prefs.remove(_deviceOnboardedKey);
+    }
+    _log(
+      'reset → cleared onboarding_complete and user_crops'
+      '${clearDeviceHistory ? ' + device_onboarded' : ''}',
+    );
     await _logAll();
   }
 }

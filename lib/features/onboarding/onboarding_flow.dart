@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 
+import '../../data/auth/auth_service.dart';
 import '../../data/models/catalog_crop.dart';
 import '../../data/notifications/watering_notification_service.dart';
+import '../../data/sync/crops_sync_service.dart';
 import '../../data/user_crops_repository.dart';
+import '../auth/screens/auth_screen.dart';
 import 'screens/crop_picker_step.dart';
 import 'screens/crop_setup_step.dart';
 import 'screens/watering_promise_step.dart';
@@ -14,12 +17,22 @@ class OnboardingFlow extends StatefulWidget {
     super.key,
     required this.repository,
     required this.notifications,
+    required this.auth,
+    required this.sync,
+    required this.onAuthenticated,
+    this.onCancelToLogin,
   });
 
   final UserCropsRepository repository;
   final WateringNotificationService notifications;
+  final AuthService auth;
+  final CropsSyncService sync;
+  final VoidCallback onAuthenticated;
 
-  static const totalSteps = 4;
+  /// When set, welcome offers a way back to the login screen.
+  final VoidCallback? onCancelToLogin;
+
+  static const totalSteps = 5;
 
   @override
   State<OnboardingFlow> createState() => _OnboardingFlowState();
@@ -55,6 +68,7 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
       1 => () => _goToStep(0),
       2 => () => _goToStep(1),
       3 => () => _goToStep(2),
+      4 => () => _goToStep(3),
       _ => null,
     };
   }
@@ -66,7 +80,10 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
       totalSteps: OnboardingFlow.totalSteps,
       onBack: _onBack(),
       child: switch (_step) {
-        0 => WelcomeStep(onNext: () => _goToStep(1)),
+        0 => WelcomeStep(
+            onNext: () => _goToStep(1),
+            onSignIn: widget.onCancelToLogin,
+          ),
         1 => CropPickerStep(onCropSelected: _onCropSelected),
         2 => CropSetupStep(
             repository: widget.repository,
@@ -79,6 +96,16 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
             crop: _selectedCrop!,
             plantedAt: _plantedAt!,
             lastWateredAt: _lastWateredAt!,
+            onContinue: () => _goToStep(4),
+          ),
+        4 => AuthScreen(
+            auth: widget.auth,
+            repository: widget.repository,
+            notifications: widget.notifications,
+            sync: widget.sync,
+            mode: AuthMode.signUp,
+            embeddedInOnboarding: true,
+            onAuthenticated: widget.onAuthenticated,
           ),
         _ => const SizedBox.shrink(),
       },

@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../../../core/theme/app_theme.dart';
+import '../../../data/auth/auth_service.dart';
 import '../../../data/crop_catalog.dart';
 import '../../../data/models/user_crop.dart';
 import '../../../data/notifications/watering_notification_service.dart';
+import '../../../data/sync/crops_sync_service.dart';
 import '../../../data/user_crops_repository.dart';
-import '../../onboarding/onboarding_flow.dart';
 import '../../onboarding/screens/crop_picker_screen.dart';
 import '../widgets/crop_card.dart';
 
@@ -15,10 +16,16 @@ class HomeScreen extends StatefulWidget {
     super.key,
     required this.repository,
     required this.notifications,
+    required this.auth,
+    required this.sync,
+    required this.onSignedOut,
   });
 
   final UserCropsRepository repository;
   final WateringNotificationService notifications;
+  final AuthService auth;
+  final CropsSyncService sync;
+  final Future<void> Function() onSignedOut;
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -140,13 +147,63 @@ class _HomeScreenState extends State<HomeScreen> {
     if (added == true) await _refresh();
   }
 
+  Future<void> _openAccount() async {
+    final email = widget.auth.currentUser?.email ?? 'Compte';
+    await showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: creme,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (context) {
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(24, 20, 24, 16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(
+                  'Compte',
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  email,
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        color: vertProfond.withValues(alpha: 0.7),
+                      ),
+                ),
+                const SizedBox(height: 20),
+                FilledButton.icon(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    _signOut();
+                  },
+                  icon: const Icon(Icons.logout),
+                  label: const Text('Se déconnecter'),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> _signOut() async {
+    await widget.auth.signOut();
+    if (!mounted) return;
+    await widget.onSignedOut();
+  }
+
   Future<void> _resetOnboarding() async {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Reset onboarding ?'),
         content: const Text(
-          'Supprime toutes les plantes et relance l\'onboarding.',
+          'Supprime toutes les plantes, déconnecte et relance l\'onboarding.',
         ),
         actions: [
           TextButton(
@@ -163,18 +220,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
     if (confirmed != true || !mounted) return;
     await widget.notifications.cancelAll();
-    await widget.repository.resetOnboarding();
-    if (!mounted) return;
-
-    Navigator.of(context).pushAndRemoveUntil(
-      MaterialPageRoute(
-        builder: (_) => OnboardingFlow(
-          repository: widget.repository,
-          notifications: widget.notifications,
-        ),
-      ),
-      (_) => false,
-    );
+    await widget.auth.signOut();
+    await widget.repository.resetOnboarding(clearDeviceHistory: true);
+    await widget.onSignedOut();
   }
 
   Future<void> _testNotification() async {
@@ -429,6 +477,8 @@ class _HomeScreenState extends State<HomeScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Notifications replanifiées')),
         );
+      case 'sign_out':
+        await _signOut();
       case 'reset_onboarding':
         await _resetOnboarding();
       default:
@@ -448,6 +498,11 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
         ),
         actions: [
+          IconButton(
+            tooltip: 'Compte',
+            icon: const Icon(Icons.account_circle_outlined),
+            onPressed: _openAccount,
+          ),
           PopupMenuButton<String>(
             tooltip: 'Menu dev',
             icon: const Icon(Icons.bug_report_outlined),
@@ -477,6 +532,15 @@ class _HomeScreenState extends State<HomeScreen> {
                   contentPadding: EdgeInsets.zero,
                   leading: Icon(Icons.schedule),
                   title: Text('Replanifier notifs'),
+                  dense: true,
+                ),
+              ),
+              PopupMenuItem(
+                value: 'sign_out',
+                child: ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  leading: Icon(Icons.logout),
+                  title: Text('Déconnexion'),
                   dense: true,
                 ),
               ),
