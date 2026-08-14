@@ -6,7 +6,6 @@ import 'core/config/supabase_config.dart';
 import 'data/auth/auth_service.dart';
 import 'data/crop_catalog.dart';
 import 'data/notifications/watering_notification_service.dart';
-import 'data/sync/crops_sync_service.dart';
 import 'data/user_crops_repository.dart';
 
 Future<void> main() async {
@@ -19,17 +18,15 @@ Future<void> main() async {
     await auth.initialize();
   }
 
-  final repository = UserCropsRepository();
+  final repository = UserCropsRepository(auth: auth);
   final notifications = WateringNotificationService();
   await notifications.init();
-  final sync = CropsSyncService(auth: auth, repository: repository);
 
   runApp(
     EcloseApp(
       repository: repository,
       notifications: notifications,
       auth: auth,
-      sync: sync,
     ),
   );
 }

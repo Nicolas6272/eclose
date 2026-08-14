@@ -8,7 +8,7 @@ void main() {
         catalogCropId: 1,
         name: name,
         plantedAt: DateTime(2026, 6, 1),
-        addedAt: DateTime(2026, 6, 1),
+        createdAt: DateTime(2026, 6, 1),
         lastWateredAt: DateTime(2026, 8, 1),
       );
 

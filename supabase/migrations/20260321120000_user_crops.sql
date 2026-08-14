@@ -1,4 +1,8 @@
--- User crops synced from the device (local-first). RLS scoped to auth.uid().
+-- Account-owned crops. Each row belongs to one auth user (not a device).
+-- RLS: a user can only read/write their own rows.
+--
+-- If you already created the old table, drop it first then recreate:
+--   drop table if exists public.user_crops;
 
 create table if not exists public.user_crops (
   id text primary key,
@@ -7,9 +11,8 @@ create table if not exists public.user_crops (
   name text not null,
   custom_name text,
   planted_at timestamptz not null,
-  added_at timestamptz not null,
+  created_at timestamptz not null default now(),
   last_watered_at timestamptz not null,
-  interval_override_days integer,
   updated_at timestamptz not null default now()
 );
 

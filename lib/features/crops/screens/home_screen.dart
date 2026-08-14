@@ -6,7 +6,6 @@ import '../../../data/auth/auth_service.dart';
 import '../../../data/crop_catalog.dart';
 import '../../../data/models/user_crop.dart';
 import '../../../data/notifications/watering_notification_service.dart';
-import '../../../data/sync/crops_sync_service.dart';
 import '../../../data/user_crops_repository.dart';
 import '../../onboarding/screens/crop_picker_screen.dart';
 import '../widgets/crop_card.dart';
@@ -17,14 +16,12 @@ class HomeScreen extends StatefulWidget {
     required this.repository,
     required this.notifications,
     required this.auth,
-    required this.sync,
     required this.onSignedOut,
   });
 
   final UserCropsRepository repository;
   final WateringNotificationService notifications;
   final AuthService auth;
-  final CropsSyncService sync;
   final Future<void> Function() onSignedOut;
 
   @override
@@ -221,7 +218,7 @@ class _HomeScreenState extends State<HomeScreen> {
     if (confirmed != true || !mounted) return;
     await widget.notifications.cancelAll();
     await widget.auth.signOut();
-    await widget.repository.resetOnboarding(clearDeviceHistory: true);
+    await widget.repository.resetDevice(clearDeviceHistory: true);
     await widget.onSignedOut();
   }
 

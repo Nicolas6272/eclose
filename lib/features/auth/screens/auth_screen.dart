@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../data/auth/auth_service.dart';
 import '../../../data/notifications/watering_notification_service.dart';
-import '../../../data/sync/crops_sync_service.dart';
 import '../../../data/user_crops_repository.dart';
 
 enum AuthMode { signIn, signUp }
@@ -18,7 +17,6 @@ class AuthScreen extends StatefulWidget {
     required this.auth,
     required this.repository,
     required this.notifications,
-    required this.sync,
     required this.onAuthenticated,
     required this.mode,
     this.embeddedInOnboarding = false,
@@ -28,12 +26,9 @@ class AuthScreen extends StatefulWidget {
   final AuthService auth;
   final UserCropsRepository repository;
   final WateringNotificationService notifications;
-  final CropsSyncService sync;
   final VoidCallback onAuthenticated;
   final AuthMode mode;
   final bool embeddedInOnboarding;
-
-  /// When set on sign-in screen: resets local state and starts onboarding.
   final VoidCallback? onCreateAccount;
 
   @override
@@ -68,16 +63,24 @@ class _AuthScreenState extends State<AuthScreen> {
     super.dispose();
   }
 
+  Future<void> _enterApp() async {
+    if (_isSignUp) {
+      await widget.repository.attachOnboardingDraftToAccount();
+    } else {
+      await widget.repository.clearOnboardingDraft();
+    }
+    await widget.repository.markDeviceOnboarded();
+    final crops = await widget.repository.getCrops();
+    await widget.notifications.reschedule(crops);
+    if (!mounted) return;
+    widget.onAuthenticated();
+  }
+
   Future<void> _finishAlreadySignedIn() async {
     if (_isSubmitting) return;
     setState(() => _isSubmitting = true);
     try {
-      await widget.sync.syncAfterAuth();
-      await widget.repository.completeOnboarding();
-      final crops = await widget.repository.getCrops();
-      await widget.notifications.reschedule(crops);
-      if (!mounted) return;
-      widget.onAuthenticated();
+      await _enterApp();
     } catch (error) {
       if (!mounted) return;
       setState(() {
@@ -114,13 +117,7 @@ class _AuthScreenState extends State<AuthScreen> {
         );
       }
 
-      await widget.sync.syncAfterAuth();
-      await widget.repository.completeOnboarding();
-      final crops = await widget.repository.getCrops();
-      await widget.notifications.reschedule(crops);
-
-      if (!mounted) return;
-      widget.onAuthenticated();
+      await _enterApp();
     } catch (error) {
       if (!mounted) return;
       setState(() {
@@ -262,7 +259,6 @@ class _AuthScreenState extends State<AuthScreen> {
                     )
                   : Text(_isSignUp ? 'Créer mon compte' : 'Se connecter'),
             ),
-            // Sign-in only: create account must restart onboarding.
             if (!_isSignUp && widget.onCreateAccount != null) ...[
               const SizedBox(height: 8),
               TextButton(

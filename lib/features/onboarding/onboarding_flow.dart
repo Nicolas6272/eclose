@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../../data/auth/auth_service.dart';
 import '../../data/models/catalog_crop.dart';
 import '../../data/notifications/watering_notification_service.dart';
-import '../../data/sync/crops_sync_service.dart';
 import '../../data/user_crops_repository.dart';
 import '../auth/screens/auth_screen.dart';
 import 'screens/crop_picker_step.dart';
@@ -18,7 +17,6 @@ class OnboardingFlow extends StatefulWidget {
     required this.repository,
     required this.notifications,
     required this.auth,
-    required this.sync,
     required this.onAuthenticated,
     this.onCancelToLogin,
   });
@@ -26,10 +24,7 @@ class OnboardingFlow extends StatefulWidget {
   final UserCropsRepository repository;
   final WateringNotificationService notifications;
   final AuthService auth;
-  final CropsSyncService sync;
   final VoidCallback onAuthenticated;
-
-  /// When set, welcome offers a way back to the login screen.
   final VoidCallback? onCancelToLogin;
 
   static const totalSteps = 5;
@@ -102,7 +97,6 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
             auth: widget.auth,
             repository: widget.repository,
             notifications: widget.notifications,
-            sync: widget.sync,
             mode: AuthMode.signUp,
             embeddedInOnboarding: true,
             onAuthenticated: widget.onAuthenticated,

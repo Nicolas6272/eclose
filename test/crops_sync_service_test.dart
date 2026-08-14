@@ -1,48 +1,43 @@
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:eclose/data/models/user_crop.dart';
-import 'package:eclose/data/sync/crops_sync_service.dart';
-
-UserCrop _crop({
-  required String id,
-  required DateTime updatedAt,
-  DateTime? lastWateredAt,
-}) {
-  final watered = lastWateredAt ?? updatedAt;
-  return UserCrop(
-    id: id,
-    catalogCropId: 1,
-    name: 'Tomate',
-    plantedAt: DateTime(2026, 3, 1),
-    addedAt: DateTime(2026, 3, 1),
-    lastWateredAt: watered,
-    updatedAt: updatedAt,
-  );
-}
 
 void main() {
-  test('merge keeps newer updatedAt per id and unions both sides', () {
-    final older = DateTime(2026, 3, 10);
-    final newer = DateTime(2026, 3, 12);
-
-    final local = [
-      _crop(id: 'a', updatedAt: older, lastWateredAt: older),
-      _crop(id: 'b', updatedAt: newer),
-    ];
-    final remote = [
-      _crop(id: 'a', updatedAt: newer, lastWateredAt: newer),
-      _crop(id: 'c', updatedAt: older),
-    ];
-
-    final merged = CropsSyncService.mergeLastWriteWins(
-      local: local,
-      remote: remote,
+  test('toSupabaseRow links the crop to the given user_id', () {
+    final crop = UserCrop(
+      id: 'crop-1',
+      catalogCropId: 12,
+      name: 'Tomate',
+      plantedAt: DateTime.utc(2026, 3, 1),
+      createdAt: DateTime.utc(2026, 3, 1),
+      lastWateredAt: DateTime.utc(2026, 3, 10),
+      updatedAt: DateTime.utc(2026, 3, 10),
     );
-    final byId = {for (final c in merged) c.id: c};
 
-    expect(byId.keys, unorderedEquals(['a', 'b', 'c']));
-    expect(byId['a']!.updatedAt, newer);
-    expect(byId['b']!.updatedAt, newer);
-    expect(byId['c']!.updatedAt, older);
+    final row = crop.toSupabaseRow('user-uuid');
+
+    expect(row['id'], 'crop-1');
+    expect(row['user_id'], 'user-uuid');
+    expect(row['catalog_crop_id'], 12);
+    expect(row['name'], 'Tomate');
+    expect(row.containsKey('interval_override_days'), isFalse);
+    expect(row.containsKey('added_at'), isFalse);
+    expect(row.containsKey('created_at'), isTrue);
+  });
+
+  test('fromSupabase restores created_at', () {
+    final crop = UserCrop.fromSupabase({
+      'id': 'crop-1',
+      'catalog_crop_id': 12,
+      'name': 'Tomate',
+      'custom_name': null,
+      'planted_at': '2026-03-01T00:00:00.000Z',
+      'created_at': '2026-03-01T00:00:00.000Z',
+      'last_watered_at': '2026-03-10T00:00:00.000Z',
+      'updated_at': '2026-03-10T00:00:00.000Z',
+    });
+
+    expect(crop.catalogCropId, 12);
+    expect(crop.createdAt, DateTime.parse('2026-03-01T00:00:00.000Z'));
   });
 }

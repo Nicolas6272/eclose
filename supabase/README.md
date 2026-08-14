@@ -17,6 +17,8 @@ SUPABASE_ANON_KEY=sb_publishable_...   # publishable key, NOT service role
 
 Apply the SQL in [`migrations/20260321120000_user_crops.sql`](migrations/20260321120000_user_crops.sql) via the Supabase SQL editor (or CLI).
 
+Crops live in `user_crops` keyed by `user_id`. The device only keeps an onboarding draft until signup; login loads that account’s rows (no local merge).
+
 ## Auth settings (obligatoire pour V1)
 
 1. **Authentication → Providers → Email** → désactiver **Confirm email**
