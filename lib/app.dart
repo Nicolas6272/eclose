@@ -65,7 +65,8 @@ class _AppEntryState extends State<_AppEntry> {
   bool _isLoading = true;
   bool _deviceOnboarded = false;
   bool _forceOnboarding = false;
-  bool _hasSession = false;
+  /// Only set true after attach/bootstrap finished — not on raw auth events.
+  bool _readyForHome = false;
   String? _error;
   StreamSubscription<AuthState>? _authSub;
 
@@ -73,9 +74,16 @@ class _AppEntryState extends State<_AppEntry> {
   void initState() {
     super.initState();
     _bootstrap();
+    // Only react to logout here. Login/signup must call [_onAuthSuccess]
+    // after the onboarding draft is attached, otherwise Home races ahead.
     _authSub = widget.auth.authStateChanges.listen((state) {
       if (!mounted) return;
-      setState(() => _hasSession = state.session != null);
+      if (state.session == null && _readyForHome) {
+        setState(() {
+          _readyForHome = false;
+          _forceOnboarding = false;
+        });
+      }
     });
   }
 
@@ -90,24 +98,28 @@ class _AppEntryState extends State<_AppEntry> {
       final deviceOnboarded = await widget.repository.hasDeviceOnboarded();
       final hasSession = widget.auth.isSignedIn;
 
-      // Quit mid-onboarding → restart clean (no leftover draft).
       if (!hasSession) {
         await widget.repository.clearOnboardingDraft();
       }
 
+      var readyForHome = false;
       if (hasSession) {
+        // Recover draft if signup crashed after session, before attach.
+        try {
+          await widget.repository.attachOnboardingDraftToAccount();
+        } catch (_) {}
         try {
           final crops = await widget.repository.getCrops();
           await widget.notifications.reschedule(crops);
-        } catch (_) {
-          // Table missing / offline: still open Home.
-        }
+        } catch (_) {}
+        readyForHome = true;
+        await widget.repository.markDeviceOnboarded();
       }
 
       if (!mounted) return;
       setState(() {
-        _deviceOnboarded = deviceOnboarded;
-        _hasSession = hasSession;
+        _deviceOnboarded = deviceOnboarded || readyForHome;
+        _readyForHome = readyForHome;
         _isLoading = false;
       });
     } catch (error) {
@@ -120,12 +132,11 @@ class _AppEntryState extends State<_AppEntry> {
   }
 
   Future<void> _onAuthSuccess() async {
-    await widget.repository.markDeviceOnboarded();
     if (!mounted) return;
     setState(() {
       _deviceOnboarded = true;
       _forceOnboarding = false;
-      _hasSession = true;
+      _readyForHome = true;
     });
   }
 
@@ -133,7 +144,7 @@ class _AppEntryState extends State<_AppEntry> {
     await widget.notifications.cancelAll();
     if (!mounted) return;
     setState(() {
-      _hasSession = false;
+      _readyForHome = false;
       _forceOnboarding = false;
     });
   }
@@ -141,10 +152,7 @@ class _AppEntryState extends State<_AppEntry> {
   Future<void> _startCreateAccount() async {
     await widget.repository.clearOnboardingDraft();
     if (!mounted) return;
-    setState(() {
-      _forceOnboarding = true;
-      _hasSession = false;
-    });
+    setState(() => _forceOnboarding = true);
   }
 
   void _cancelCreateAccount() {
@@ -176,7 +184,7 @@ class _AppEntryState extends State<_AppEntry> {
       );
     }
 
-    if (_hasSession) {
+    if (_readyForHome) {
       return HomeScreen(
         repository: widget.repository,
         notifications: widget.notifications,

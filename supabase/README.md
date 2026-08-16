@@ -1,36 +1,49 @@
-# Supabase Auth + sync (Phase 3a)
+# Supabase Auth + crops (Phase 3a)
 
-## Config app
+## App config
 
-Keys in `.env.local` (gitignored). The app loads them via `flutter_dotenv` — just run:
+`.env` is gitignored and **not** bundled as a Flutter asset.
+
+On iOS/Android, the app runs in a sandbox and **cannot** read your Mac's
+`.env` file. Inject it at build time:
 
 ```bash
-flutter run
-```
+# Local (simulator / device) — preferred
+flutter run --dart-define-from-file=.env
 
-Required keys:
+# Or explicit defines
+flutter run \
+  --dart-define=SUPABASE_URL=https://YOUR_PROJECT.supabase.co \
+  --dart-define=SUPABASE_ANON_KEY=sb_publishable_...
+
+# Store / CI builds
+flutter build ipa --dart-define-from-file=.env
+```
 
 ```
 SUPABASE_URL=https://YOUR_PROJECT.supabase.co
 SUPABASE_ANON_KEY=sb_publishable_...   # publishable key, NOT service role
 ```
 
-Apply the SQL in [`migrations/20260321120000_user_crops.sql`](migrations/20260321120000_user_crops.sql) via the Supabase SQL editor (or CLI).
+## Migration
 
-Crops live in `user_crops` keyed by `user_id`. The device only keeps an onboarding draft until signup; login loads that account’s rows (no local merge).
+Apply [`migrations/20260321120000_user_crops.sql`](migrations/20260321120000_user_crops.sql):
+
+```bash
+supabase link --project-ref YOUR_REF
+supabase db push
+```
+
+Or paste the SQL in the Supabase SQL editor.
+
+Crops live in `user_crops` keyed by `user_id` (RLS). The device only keeps an onboarding draft until signup.
 
 ## Auth settings (obligatoire pour V1)
 
 1. **Authentication → Providers → Email** → désactiver **Confirm email**
    - Sinon chaque signup envoie un mail → limite **2 emails/heure** sur le SMTP gratuit
-   - Même les essais ratés (mot de passe trop court, etc.) peuvent compter dans cette limite
-   - Résultat : 429 après quelques clics, **aucun user visible** dans le dashboard
+2. **Authentication → Rate Limits** — certaines limites sont ajustables ; la limite email nécessite un SMTP custom
 
-2. **Authentication → Rate Limits** — tu peux augmenter certaines limites (signup, etc.)
-   - La limite **email** ne change pas sans **SMTP custom** (Resend, SendGrid…)
+## Erreur 429
 
-## Erreur 429 sans compte créé
-
-C’est normal si **Confirm email** est encore activé : Supabase bloque avant de finaliser le user, ou n’affiche pas le compte tant qu’il n’est pas confirmé.
-
-**Fix rapide :** désactiver Confirm email → attendre ~1 h (reset limite email) → réessayer **une** fois.
+Souvent la limite email (Confirm email encore ON). Désactive Confirm email, attends ~1 h, réessaie une fois.

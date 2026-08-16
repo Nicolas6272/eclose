@@ -78,8 +78,15 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _waterCrop(UserCrop crop) async {
-    await widget.repository.markWatered(crop.id);
-    await _refresh();
+    try {
+      await widget.repository.markWatered(crop);
+      await _refresh();
+    } catch (error) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(AuthService.friendlyError(error))),
+      );
+    }
   }
 
   /// Returns true if the crop was deleted.
@@ -561,6 +568,35 @@ class _HomeScreenState extends State<HomeScreen> {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(
                 child: CircularProgressIndicator(color: terracotta),
+              );
+            }
+
+            if (snapshot.hasError) {
+              return Column(
+                children: [
+                  Expanded(
+                    child: Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(24),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              AuthService.friendlyError(snapshot.error!),
+                              style: Theme.of(context).textTheme.bodyLarge,
+                              textAlign: TextAlign.center,
+                            ),
+                            const SizedBox(height: 16),
+                            FilledButton(
+                              onPressed: _refresh,
+                              child: const Text('Réessayer'),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               );
             }
 

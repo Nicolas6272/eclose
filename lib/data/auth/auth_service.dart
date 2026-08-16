@@ -80,8 +80,8 @@ class AuthService {
   void _ensureConfigured() {
     if (!isConfigured) {
       throw StateError(
-        'Supabase n\'est pas configuré. Lance l\'app avec '
-        '--dart-define=SUPABASE_URL=... et --dart-define=SUPABASE_ANON_KEY=...',
+        'Supabase n\'est pas configuré. Relance avec : '
+        'flutter run --dart-define-from-file=.env',
       );
     }
   }
@@ -115,6 +115,12 @@ class AuthService {
 
     final message = error is StateError ? error.message : error.toString();
     final raw = message.toLowerCase();
+    if (raw.contains('pgrst') || raw.contains('postgrest')) {
+      if (raw.contains('user_crops') || raw.contains('schema cache')) {
+        return 'Table user_crops introuvable. Applique la migration Supabase.';
+      }
+      return 'Erreur base de données. Réessaie.';
+    }
     if (raw.contains('429') || raw.contains('rate limit')) {
       return 'Trop de tentatives. Attends 1 à 2 minutes, puis réessaie.';
     }
@@ -136,7 +142,7 @@ class AuthService {
       return 'Réseau indisponible. Réessaie plus tard.';
     }
     if (raw.contains('supabase n\'est pas configuré')) {
-      return 'Supabase non configuré (.env.local manquant ou incomplet).';
+      return 'Supabase non configuré. Utilise --dart-define-from-file=.env';
     }
     return 'Connexion impossible. Réessaie.';
   }

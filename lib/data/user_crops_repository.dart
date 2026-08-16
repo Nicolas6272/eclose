@@ -3,6 +3,7 @@ import 'dart:developer' as developer;
 
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uuid/uuid.dart';
 
 import '../core/utils/fr_sort.dart';
 import 'auth/auth_service.dart';
@@ -16,9 +17,11 @@ import 'models/user_crop.dart';
 /// - [device_onboarded]: device has finished signup at least once (login screen)
 /// - temporary onboarding crop draft until account creation
 class UserCropsRepository {
-  UserCropsRepository({required this.auth});
+  UserCropsRepository({required this.auth, Uuid? uuid})
+      : _uuid = uuid ?? const Uuid();
 
   final AuthService auth;
+  final Uuid _uuid;
 
   static const _draftKey = 'user_crops';
   static const _deviceOnboardedKey = 'device_onboarded';
@@ -29,6 +32,8 @@ class UserCropsRepository {
   bool get _useRemote => auth.isConfigured && auth.isSignedIn;
 
   String? get _userId => auth.currentUser?.id;
+
+  String _newId() => _uuid.v4();
 
   void _log(String message) {
     developer.log(message, name: _logName);
@@ -144,7 +149,7 @@ class UserCropsRepository {
     required DateTime lastWateredAt,
   }) async {
     final crop = UserCrop.fromCatalog(
-      id: DateTime.now().microsecondsSinceEpoch.toString(),
+      id: _newId(),
       catalog: catalogCrop,
       plantedAt: plantedAt,
       lastWateredAt: lastWateredAt,
@@ -165,7 +170,7 @@ class UserCropsRepository {
     required DateTime lastWateredAt,
   }) async {
     final crop = UserCrop.fromCatalog(
-      id: DateTime.now().microsecondsSinceEpoch.toString(),
+      id: _newId(),
       catalog: catalogCrop,
       plantedAt: plantedAt,
       lastWateredAt: lastWateredAt,
@@ -185,17 +190,19 @@ class UserCropsRepository {
     await clearOnboardingDraft();
   }
 
-  Future<void> markWatered(String cropId) async {
-    final crops = await getCrops();
-    final index = crops.indexWhere((crop) => crop.id == cropId);
-    if (index == -1) return;
-
-    crops[index] = crops[index].copyWith(lastWateredAt: DateTime.now());
+  /// Marks watered with a targeted upsert (no full list fetch).
+  Future<UserCrop> markWatered(UserCrop crop) async {
+    final updated = crop.copyWith(lastWateredAt: DateTime.now());
     if (_useRemote) {
-      await _upsertRemote([crops[index]]);
-    } else {
-      await _writeLocalDraft(crops);
+      await _upsertRemote([updated]);
+      return updated;
     }
+    final crops = await _readLocalDraft();
+    final index = crops.indexWhere((c) => c.id == crop.id);
+    if (index == -1) return updated;
+    crops[index] = updated;
+    await _writeLocalDraft(crops);
+    return updated;
   }
 
   Future<void> updateCrop(UserCrop updated) async {

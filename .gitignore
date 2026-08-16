@@ -44,7 +44,8 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
-# Local secrets (Perenual API key for fetch script)
+# Local secrets (never commit)
+.env
 .env.local
 
 # Downloaded plant-variety-database cache (rebuild downloads if missing)

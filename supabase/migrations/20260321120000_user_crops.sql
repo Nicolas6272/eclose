@@ -1,7 +1,7 @@
 -- Account-owned crops. Each row belongs to one auth user (not a device).
 -- RLS: a user can only read/write their own rows.
 --
--- If you already created the old table, drop it first then recreate:
+-- If you need a clean recreate:
 --   drop table if exists public.user_crops;
 
 create table if not exists public.user_crops (
@@ -19,6 +19,11 @@ create table if not exists public.user_crops (
 create index if not exists user_crops_user_id_idx on public.user_crops (user_id);
 
 alter table public.user_crops enable row level security;
+
+drop policy if exists "user_crops_select_own" on public.user_crops;
+drop policy if exists "user_crops_insert_own" on public.user_crops;
+drop policy if exists "user_crops_update_own" on public.user_crops;
+drop policy if exists "user_crops_delete_own" on public.user_crops;
 
 create policy "user_crops_select_own"
   on public.user_crops
