@@ -7,7 +7,6 @@ import '../../../data/models/catalog_crop.dart';
 import '../../../data/models/user_crop.dart';
 import '../../../data/notifications/watering_notification_service.dart';
 import '../../../data/user_crops_repository.dart';
-import '../../crops/screens/home_screen.dart';
 import '../widgets/plant_added_badge.dart';
 
 class WateringPromiseStep extends StatefulWidget {
@@ -18,6 +17,7 @@ class WateringPromiseStep extends StatefulWidget {
     required this.crop,
     required this.plantedAt,
     required this.lastWateredAt,
+    required this.onContinue,
   });
 
   final UserCropsRepository repository;
@@ -25,6 +25,7 @@ class WateringPromiseStep extends StatefulWidget {
   final CatalogCrop crop;
   final DateTime plantedAt;
   final DateTime lastWateredAt;
+  final VoidCallback onContinue;
 
   @override
   State<WateringPromiseStep> createState() => _WateringPromiseStepState();
@@ -91,21 +92,9 @@ class _WateringPromiseStepState extends State<WateringPromiseStep>
       await widget.notifications.requestPermission();
     }
 
-    await widget.repository.completeOnboarding();
-    final crops = await widget.repository.getCrops();
-    await widget.notifications.reschedule(crops);
-
+    // Crop is already saved in setup; auth step completes onboarding.
     if (!mounted) return;
-
-    Navigator.of(context).pushAndRemoveUntil(
-      MaterialPageRoute(
-        builder: (_) => HomeScreen(
-          repository: widget.repository,
-          notifications: widget.notifications,
-        ),
-      ),
-      (_) => false,
-    );
+    widget.onContinue();
   }
 
   @override

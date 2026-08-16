@@ -3,9 +3,14 @@ import 'package:flutter/material.dart';
 import '../../../core/theme/app_theme.dart';
 
 class WelcomeStep extends StatefulWidget {
-  const WelcomeStep({super.key, required this.onNext});
+  const WelcomeStep({
+    super.key,
+    required this.onNext,
+    this.onSignIn,
+  });
 
   final VoidCallback onNext;
+  final VoidCallback? onSignIn;
 
   @override
   State<WelcomeStep> createState() => _WelcomeStepState();
@@ -128,9 +133,26 @@ class _WelcomeStepState extends State<WelcomeStep>
           const Spacer(flex: 3),
           FadeTransition(
             opacity: _contentOpacity,
-            child: FilledButton(
-              onPressed: widget.onNext,
-              child: const Text('Commencer'),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                FilledButton(
+                  onPressed: widget.onNext,
+                  child: const Text('Commencer'),
+                ),
+                if (widget.onSignIn != null) ...[
+                  const SizedBox(height: 8),
+                  TextButton(
+                    onPressed: widget.onSignIn,
+                    child: Text(
+                      'J\'ai déjà un compte',
+                      style: TextStyle(
+                        color: vertProfond.withValues(alpha: 0.55),
+                      ),
+                    ),
+                  ),
+                ],
+              ],
             ),
           ),
           const SizedBox(height: 32),
